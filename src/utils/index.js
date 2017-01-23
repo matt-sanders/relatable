@@ -36,6 +36,15 @@ export function getSecond(chain = [0, 0]){
     initialLabel = second === 0 ? 'Aunt/Uncle' : 'Cousin';
   }
   let parts = [initialLabel];
+
+  //calculate the great, grand etc
+  if ( first === 0 || ( first > 0 && second === 0 ) ){
+    let positiveDepth = Math.abs(chain[1]);
+    for (let i = 1; i < positiveDepth; i++){
+      parts.unshift(i === 1 ? 'Grand' : 'Great');
+    }
+  }
+  
   // let positiveBranch = Math.abs(this.secondBranch)
   // 1 = parent
   // 1 - 1 == 1st cousin
@@ -51,12 +60,13 @@ export function getSecond(chain = [0, 0]){
     if (second > first) parts.push(`${second - first} removed`);
   }
   
-  /*
-     for (let i = 1; i < positiveBranch; i++) {
-     if (this.firstBranch === 0) {
-     parts.unshift(i === 1 ? 'Grand' : 'Great')
-     }
-     }
-   */
   return parts.join(' ');
+}
+
+/**
+* Just a wrapper function for the above
+* @arg {chain} array
+*/
+export function getRelationLabel(chain){
+  return chain.length === 1 ? getFirst(chain) : getSecond(chain);
 }
