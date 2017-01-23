@@ -39,9 +39,17 @@ export function getSecond(chain = [0, 0]){
 
   //calculate the great, grand etc
   if ( first === 0 || ( first > 0 && second === 0 ) ){
-    let positiveDepth = Math.abs(chain[1]);
+    let positiveDepth = Math.abs( first === 0 ? chain[1] : chain[0]);
     for (let i = 1; i < positiveDepth; i++){
-      parts.unshift(i === 1 ? 'Grand' : 'Great');
+      let grand = (i === 1) ? 'Grand' : 'Great';
+      //Aunty/Uncle has an edge case where it goes Aunty -> Great Aunt -> Great Grand
+      if ( first > 0 && i === 1) grand = 'Great';
+
+      if ( first > 0 && i === 2 ) {
+        parts.splice(1, 0, 'Grand');
+      } else { 
+        parts.unshift(grand);
+      }
     }
   }
   
