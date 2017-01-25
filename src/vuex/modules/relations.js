@@ -7,6 +7,9 @@ const state = {
 const actions = {
   addToChain({commit}, relation){
     commit(types.ADD_TO_CHAIN,relation);
+  },
+  removeFromChain({commit}, index){
+    commit(types.REMOVE_FROM_CHAIN, index);
   }
 };
 
