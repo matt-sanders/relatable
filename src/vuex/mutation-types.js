@@ -1,0 +1,2 @@
+export const ADD_TO_CHAIN = 'ADD_TO_CHAIN';
+export const REMOVE_FROM_CHAIN = 'REMOVE_FROM_CHAIN';

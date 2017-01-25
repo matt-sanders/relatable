@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png">
-    <hello></hello>
+    <hello :chain="[2,0]"></hello>
   </div>
 </template>
 
