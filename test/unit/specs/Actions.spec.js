@@ -36,11 +36,13 @@ describe("Actions", () => {
   });
 
   it('removeFromChain', done => {
-    Relations.state.relationChain = [
-      [0,0],
-      [0,0]
-    ];
-    testAction(Relations.actions.removeFromChain, 1, Relations.state, [
+    const state = {
+      relationChain: [
+        [0,0],
+        [0,0]
+      ]
+    };
+    testAction(Relations.actions.removeFromChain, 1, state, [
       {type: 'REMOVE_FROM_CHAIN', payload: 1 }
     ], done);
   });
