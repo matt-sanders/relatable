@@ -13,6 +13,20 @@ const actions = {
   }
 };
 
+const getters = {
+  chainTotal(state){
+    let total = [0];
+    state.relationChain.forEach( chain => {
+      total[0] += chain[0];
+      if ( chain.length === 2 ){
+        if ( total.length === 1 ) total[1] = 0;
+        total[1] += chain[1];
+      }
+    });
+    return total;
+  }
+};
+
 const mutations = {
   [types.ADD_TO_CHAIN](state, relation){
     state.relationChain.push(relation);
@@ -24,6 +38,7 @@ const mutations = {
 
 export default {
   state,
+  getters,
   actions,
   mutations
 };
