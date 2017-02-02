@@ -1,16 +1,21 @@
 import Relations from 'src/vuex/modules/relations';
 
 describe("Getters", () => {
-  it('chainTotal', () => {
+  it('allRelations', () => {
     const state = {
       relationChain: [
-        [0, 0],
-        [2, 3],
-        [5],
-        [7, 8]
+        [-1,1],
+        [-1,1]
       ]
     };
-    const total = Relations.getters.chainTotal( state );
-    expect( total ).to.deep.equal( [ 14, 11 ] );
+    const relationChain = Relations.getters.allRelations( state );
+    let mapped = relationChain.map( relation => {
+      return relation.join(',');
+    });
+
+    state.relationChain.forEach( relation => {
+      let id = relation.join(',');
+      expect( mapped.indexOf( id ) ).to.not.equal(-1);
+    });
   });
 });

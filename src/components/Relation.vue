@@ -9,7 +9,7 @@
  import { mapActions } from 'vuex';
  
  export default {
-   props: ['chain', 'remove', 'index'],
+   props: ['chain', 'remove', 'index', 'display'],
    computed: {
      label(){
        return getRelationLabel( this.chain );
@@ -21,6 +21,7 @@
        'addToChain'
      ]),
      handleClick(){
+       if ( this.display === true ) return;
        if ( this.remove === true ){
          this.removeFromChain(this.index);
        } else {

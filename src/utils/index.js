@@ -134,14 +134,16 @@ export function traverseRelation(relationChain, chain = [0]){
     }
 
     if ( relation.length === 2 ){
-      if ( chain.length === 1 ) chain.push(0);
-      chain[1] += relation[1];
+      if ( chain[0] <= 0 || chain.length === 2 ){
+        if ( chain.length === 1 ) chain.push(0);
+        chain[1] += relation[1];
+      }
     }
   });
 
   //add the main chain
   chains.push( chain );
-  if ( chain.length === 1 && chain[0] === 0 ) chains.push( [0, 0] );
+  //if ( chain.length === 1 && chain[0] === 0 ) chains.push( [0, 0] );
 
   //get only unique chains
   let seenChains = [];
@@ -154,6 +156,9 @@ export function traverseRelation(relationChain, chain = [0]){
       finalChains.push( singleChain );
     }
   });
+
+  //add our sibling if we are an option
+  if ( finalChains.length > 1 && seenChains.indexOf( '0' ) > -1 && seenChains.indexOf('0,0') === -1) finalChains.push( [0,0] );
   
   return finalChains;
 }

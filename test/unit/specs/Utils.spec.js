@@ -34,6 +34,14 @@ const secondRelations = [
 
 const relationChains = [
   {
+    chain: [ [0] ],
+    options: [ '0' ]
+  },
+  {
+    chain: [ [1], [0,0] ],
+    options: [ '1' ]
+  },
+  {
     chain: [ [0,0], [1] ], //brothers, son
     options: [ '0,1' ] // nephew
   },
@@ -54,17 +62,6 @@ const relationChains = [
     options: [ '-3,1' ]
   }
 ];
-
-/*
-   Others that we need
-   [1,1] -> [2,0] == [2,0] //Cousins, Great Aunty is my great aunty
-   [0,1] -> [1,1] == [-1]/[0,1] //nephews, cousin is my nephew/child
-   [-1] -> [1,1] == [0, -1] //child's cousin is my nephew
-   [1,0] -> [1,0] == [2,0] //aunties auntie is my great aunty
-   [0,1] -> [1] == [0,0] //nephews parent is my sibling
-   [-2] -> [1] -> [1,1] == [0,1] // granchilds dads cousin is my nephew
-   [3,0] -> [-1] == [3,1] //great gandads brothers son
-*/
 
 describe('Utils', () => {
   it('getFirst()', () => {
@@ -105,8 +102,10 @@ describe('Utils', () => {
       let mapped = options.map( option => {
         return option.join(',');
       });
+      //console.log(mapped);
       expect( options ).to.be.length( chainObj.options.length );
       chainObj.options.forEach( option => {
+        //console.log(option);
         expect( mapped.indexOf( option ) ).to.not.equal(-1);
       });
     });

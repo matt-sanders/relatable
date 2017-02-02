@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <h1>Relatable</h1>
-    <relation :chain="chainTotal"/> is Total
+    Possible Relations to you
+    <relation v-for="relation in allRelations" :chain="relation" :display="true"/>
+    <hr/>
     <div class="selectedOptions">
       <relation v-for="link in relationChain" :chain="link" :remove="true" :index="index"/>
     </div>
@@ -33,7 +35,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'chainTotal'
+      'allRelations'
     ]),
     ...mapState({
       relationChain: state => state.Relations.relationChain

@@ -1,4 +1,5 @@
 import * as types from '../mutation-types';
+import {traverseRelation} from '../../utils';
 
 const state = {
   relationChain: []
@@ -14,16 +15,8 @@ const actions = {
 };
 
 const getters = {
-  chainTotal(state){
-    let total = [0];
-    state.relationChain.forEach( chain => {
-      total[0] += chain[0];
-      if ( chain.length === 2 ){
-        if ( total.length === 1 ) total[1] = 0;
-        total[1] += chain[1];
-      }
-    });
-    return total;
+  allRelations(state){
+    return traverseRelation( state.relationChain );
   }
 };
 
