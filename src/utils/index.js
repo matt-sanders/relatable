@@ -75,9 +75,85 @@ export function getRelationLabel(chain){
   return chain.length === 1 ? getFirst(chain) : getSecond(chain);
 }
 
-export function traverseRelation(relationChain){
+/**
+ * When given an object should make a deep clone of the whole object
+ * @arg {object} object
+ */
+export function cloneObject(object){
+  return JSON.parse( JSON.stringify(object) );
+}
+
+/**
+ * Give a chain of relations it should figure out all the possible combinations of how they are eventually related to you
+ * @arg {relationChain} array
+ * @arg {chain} array
+ */
+export function traverseRelation(relationChain, chain = [0]){
   // -1 is a parent
   // 0 is a sibling
   // 1 is a child
-    
+
+  let chains = [];
+
+  // if we're coming down from 3 for example
+  // we want '2', '2,0', '1', '1,0' so get all of those
+  if ( chain.length === 1 && chain[0] < 0 ){
+    for ( let i = -1; i > chain[0]; i-- ){
+      let newChain = cloneObject(relationChain);
+      newChain[0][ newChain[0].length - 1 ]--;
+      let extraChains = traverseRelation( newChain, [i,0] );
+      chains.push( ...extraChains );
+    }
+  }
+  
+  //go through each step in the relation chain
+  relationChain.forEach( (relation, idx) => {
+    chain[ chain.length - 1 ] += relation[0];
+
+    if ( chain.length === 2 && chain[1] <= 0 ){
+      // set up a new relation chain for us to work on for these branches
+      let newChain = cloneObject(relationChain.slice( idx + 1 ));
+      if ( relation.length === 2 ) newChain.unshift( [ relation[1] ] );
+      let chainDupe;
+
+      // if we've gone into the negatives for the child branch
+      // we need to move up a parent
+      // e.g. -2,-1 becomes -3
+      if ( chain[1] < 0 ){
+        chainDupe = cloneObject( chain );
+        chainDupe[0] -= Math.abs(chainDupe[1]) - 1;
+        chainDupe.splice(-1,1);
+        if ( relation.length === 2 ) newChain[0][0]--;
+      } else {
+        //duplicate the chain
+        chainDupe = cloneObject(chain.slice(0, 1));
+      }
+      //start the modified branch
+      let extraChains = traverseRelation(newChain, chainDupe);
+      chains.push( ...extraChains );
+    }
+
+    if ( relation.length === 2 ){
+      if ( chain.length === 1 ) chain.push(0);
+      chain[1] += relation[1];
+    }
+  });
+
+  //add the main chain
+  chains.push( chain );
+  if ( chain.length === 1 && chain[0] === 0 ) chains.push( [0, 0] );
+
+  //get only unique chains
+  let seenChains = [];
+  let finalChains = [];
+
+  chains.forEach( singleChain => {
+    let chainID = singleChain.join(',');
+    if ( seenChains.indexOf( chainID ) === -1 ){
+      seenChains.push( chainID );
+      finalChains.push( singleChain );
+    }
+  });
+  
+  return finalChains;
 }

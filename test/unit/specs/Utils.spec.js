@@ -1,6 +1,6 @@
-import {getFirst, getSecond, getRelationLabel} from 'src/utils';
+import {getFirst, getSecond, getRelationLabel, traverseRelation, cloneObject} from 'src/utils';
 
-let firstRelations = [
+const firstRelations = [
   [0, 'You!'],
   [-1, 'Parent'],
   [-2, 'Grand Parent'],
@@ -12,7 +12,7 @@ let firstRelations = [
   [4, 'Great Great Grand Child']
 ];
 
-let secondRelations = [
+const secondRelations = [
   [0,0, 'Sibling'],
   [0,1, 'Niece/Nephew'],
   [0,2, 'Grand Niece/Nephew'],
@@ -32,6 +32,29 @@ let secondRelations = [
   [-3,5, '3 Cousin 2 removed']
 ];
 
+const relationChains = [
+  {
+    chain: [ [0,0], [1] ], //brothers, son
+    options: [ '0,1' ] // nephew
+  },
+  {
+    chain: [ [-1,1], [-1,1] ], //cousins cousin
+    options: [ '0', '0,0', '-1,1' ] //either you, your sibling or your cousin
+  },
+  {
+    chain: [ [-2,1], [-1,2] ],
+    options: [ '0', '0,0', '-1,1', '-2,2' ]
+  },
+  {
+    chain: [ [-2,1], [-2,2] ],
+    options: [ '-1', '-1,0', '-2,1' ]
+  },
+  {
+    chain: [ [-1], [-2], [0,0], [1] ],
+    options: [ '-3,1' ]
+  }
+];
+
 /*
    Others that we need
    [1,1] -> [2,0] == [2,0] //Cousins, Great Aunty is my great aunty
@@ -44,25 +67,49 @@ let secondRelations = [
 */
 
 describe('Utils', () => {
-  it('should get the first chain correctly', () => {
+  it('getFirst()', () => {
     firstRelations.forEach( rel => {
       expect( getFirst( [ rel[0] ] ) ).to.equal( rel[1] );
     });
   });
 
-  it('should get the second chain correctly', () => {
+  it('getSecond()', () => {
     secondRelations.forEach( rel => {
       expect( getSecond([rel[0], rel[1]]) ).to.equal(rel[2]);
     });
   });
 
-  it('should get both correctly', () => {
+  it('getRelationLabel()', () => {
     firstRelations.forEach( rel => {
       expect( getRelationLabel( [ rel[0] ] ) ).to.equal( rel[1] );
     });
     secondRelations.forEach( rel => {
       expect( getRelationLabel([rel[0], rel[1]]) ).to.equal(rel[2]);
     });    
+  });
+
+  it('cloneObject()', () => {
+    let object = {
+      foo: 'bar'
+    };
+
+    let newObject = cloneObject(object);
+    expect(newObject).to.deep.equal(object);
+    object.foo = 'test';
+    expect(newObject.foo).to.equal('bar');
+  });
+
+  it('traverseRelation()', () => {
+    relationChains.forEach( chainObj => {
+      let options = traverseRelation( chainObj.chain );
+      let mapped = options.map( option => {
+        return option.join(',');
+      });
+      expect( options ).to.be.length( chainObj.options.length );
+      chainObj.options.forEach( option => {
+        expect( mapped.indexOf( option ) ).to.not.equal(-1);
+      });
+    });
   });
 });
 
