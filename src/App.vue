@@ -1,17 +1,43 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <hello :chain="[2,0]"></hello>
+    <h1>Relatable</h1>
+    <relation :chain="chainTotal"/> is Total
+    <div class="selectedOptions">
+      <relation v-for="link in relationChain" :chain="link" :remove="true" :index="index"/>
+    </div>
+    <hr/>
+    <div class="options">
+      <relation v-for="option in options" :chain="option"/>
+    </div>
   </div>
 </template>
 
 <script>
-import Hello from './components/Hello'
+import Relation from './components/Relation';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'app',
+  data(){
+    return {
+      options: [
+        [1],
+        [0,0],
+        [1,0],
+        [1,1]
+      ]
+    };
+  },
   components: {
-    Hello
+    Relation
+  },
+  computed: {
+    ...mapGetters([
+      'chainTotal'
+    ]),
+    ...mapState({
+      relationChain: state => state.Relations.relationChain
+    })
   }
 }
 </script>

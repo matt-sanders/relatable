@@ -1,5 +1,5 @@
 <template>
-  <div class="button relation" :click="handleClick()">
+  <div class="button relation" @click="handleClick()">
     <span class="relation-label">{{label}}</span>
   </div>
 </template>
@@ -9,7 +9,7 @@
  import { mapActions } from 'vuex';
  
  export default {
-   props: ['chain', 'remove'],
+   props: ['chain', 'remove', 'index'],
    computed: {
      label(){
        return getRelationLabel( this.chain );
@@ -17,13 +17,14 @@
    },
    methods: {
      ...mapActions([
-       'chainTotal'
+       'removeFromChain',
+       'addToChain'
      ]),
      handleClick(){
        if ( this.remove === true ){
-         
+         this.removeFromChain(this.index);
        } else {
-
+         this.addToChain(this.chain);
        }
      }
    }

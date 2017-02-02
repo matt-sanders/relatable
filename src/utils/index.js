@@ -8,7 +8,7 @@ export function getFirst(chain = [0]){
   let depth = chain[0];
   if (depth === 0) return 'You!';
   
-  let parts = [ depth > 0 ? 'Parent' : 'Child' ];
+  let parts = [ depth > 0 ? 'Child' : 'Parent' ];
   
   // convert to positive for calculating branches
   let positiveDepth = Math.abs(depth);
@@ -32,40 +32,36 @@ export function getSecond(chain = [0, 0]){
   let second = parseInt(chain[1]);
   if (first === 0 && second === 0) return 'Sibling';
   let initialLabel = 'Niece/Nephew';
-  if (first > 0) {
+  if (first < 0) {
     initialLabel = second === 0 ? 'Aunt/Uncle' : 'Cousin';
   }
   let parts = [initialLabel];
 
   //calculate the great, grand etc
-  if ( first === 0 || ( first > 0 && second === 0 ) ){
+  if ( first === 0 || ( first < 0 && second === 0 ) ){
     let positiveDepth = Math.abs( first === 0 ? chain[1] : chain[0]);
     for (let i = 1; i < positiveDepth; i++){
-      let grand = (i === 1) ? 'Grand' : 'Great';
-      //Aunty/Uncle has an edge case where it goes Aunty -> Great Aunt -> Great Grand
-      if ( first > 0 && i === 1) grand = 'Great';
+      let grand = (second === 0 && i === 1 || i !== 1 ) ? 'Great' : 'Grand';
+      //if ( second == 0 && i === 1 ) grand = 'Great';
 
-      if ( first > 0 && i === 2 ) {
-        parts.splice(1, 0, 'Grand');
-      } else { 
-        parts.unshift(grand);
-      }
+      parts.unshift(grand);    
     }
-  }
-  
+  }  
   // let positiveBranch = Math.abs(this.secondBranch)
-  // 1 = parent
-  // 1 - 1 == 1st cousin
-  // 1 - 2 == 1st cousin once removed
-  // 2 - 0 == Great Aunty
-  // 2 - 1 == 1st Cousin once removed
-  if (second > 0 && first > 0) {
+  // -1 = parent
+  // -1 - 1 == 1st cousin
+  // -1 - 2 == 1st cousin once removed
+  // -2 - 0 == Great Aunty
+  // -2 - 1 == 1st Cousin once removed
+  if (second > 0 && first < 0) {
+    let positiveFirst = Math.abs(first);
+    
     // first cousin etc
-    if (second <= first) parts.unshift(second);
-    if (second > first) parts.unshift(first);
+    if (second <= positiveFirst) parts.unshift(second);
+    if (second > positiveFirst) parts.unshift(positiveFirst);
     // once removed etc
-    if (second < first) parts.push(`${first - second} removed`);
-    if (second > first) parts.push(`${second - first} removed`);
+    if (second < positiveFirst) parts.push(`${positiveFirst - second} removed`);
+    if (second > positiveFirst) parts.push(`${second - positiveFirst} removed`);
   }
   
   return parts.join(' ');
@@ -77,4 +73,11 @@ export function getSecond(chain = [0, 0]){
 */
 export function getRelationLabel(chain){
   return chain.length === 1 ? getFirst(chain) : getSecond(chain);
+}
+
+export function traverseRelation(relationChain){
+  // -1 is a parent
+  // 0 is a sibling
+  // 1 is a child
+    
 }

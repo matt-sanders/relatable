@@ -2,6 +2,7 @@ import 'es6-promise/auto';
 import Vue from 'vue';
 import Relation from 'src/components/Relation';
 
+
 describe('Relation.vue', () => {
   it('should display the correct label', () => {
     const vm = new Vue({
