@@ -10,7 +10,7 @@
         <hr/>
         <h4>
           Your:
-          <relation v-for="(link, index) in relationChain" :chain="link" :remove="true" :index="index"/>
+          <relation v-for="(link, index) in relationChain" :chain="link" :remove="true" :index="index" :pluralise="index < relationChain.length - 1"/>
         </h4>
         
         <h4 v-if="relationChain.length > 0">

@@ -4,7 +4,8 @@
       <i class="material-icons">clear</i>
     </button>
     <button type="button" class="btn btn-secondary relation btn-sm" @click="handleClick()">
-      <span class="relation-label">{{label}}</span>
+      <span class="relation-label" v-if="pluralise">{{label}}'s</span>
+      <span class="relation-label" v-else>{{label}}</span>
     </button>
   </span>
   <span v-else="display">
@@ -17,7 +18,7 @@
  import { mapActions } from 'vuex';
  
  export default {
-   props: ['chain', 'remove', 'index', 'display'],
+   props: ['chain', 'remove', 'index', 'display', 'pluralise'],
    computed: {
      label(){
        return getRelationLabel( this.chain );
