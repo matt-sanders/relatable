@@ -121,16 +121,23 @@ export function traverseRelation(relationChain, chain = [0]){
       // e.g. -2,-1 becomes -3
       if ( chain[1] < 0 ){
         chainDupe = cloneObject( chain );
-        chainDupe[0] -= Math.abs(chainDupe[1]) - 1;
+        chainDupe[0] -= Math.abs(chainDupe[1]);
         chainDupe.splice(-1,1);
-        if ( relation.length === 2 ) newChain[0][0]--;
+        if ( relation.length === 2 ) {
+          newChain[0][0]--;
+          chainDupe[0]++;
+        } else {
+          chain = chainDupe;
+        }
       } else {
         //duplicate the chain
         chainDupe = cloneObject(chain.slice(0, 1));
       }
       //start the modified branch
-      let extraChains = traverseRelation(newChain, chainDupe);
-      chains.push( ...extraChains );
+      if ( newChain.length > 0 ){
+        let extraChains = traverseRelation(newChain, chainDupe);
+        chains.push( ...extraChains );
+      }
     }
 
     if ( relation.length === 2 ){

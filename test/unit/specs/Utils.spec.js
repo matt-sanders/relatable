@@ -50,6 +50,10 @@ const relationChains = [
     options: [ '0', '0,0', '-1,1' ] //either you, your sibling or your cousin
   },
   {
+    chain: [ [-1,1], [-2] ],
+    options: [ '-2' ]
+  },
+  {
     chain: [ [-2,1], [-1,2] ],
     options: [ '0', '0,0', '-1,1', '-2,2' ]
   },
@@ -102,7 +106,8 @@ describe('Utils', () => {
       let mapped = options.map( option => {
         return option.join(',');
       });
-      //console.log(mapped);
+      //console.log(chainObj.options);
+      //console.log('====MAPPED====', mapped);
       expect( options ).to.be.length( chainObj.options.length );
       chainObj.options.forEach( option => {
         //console.log(option);
