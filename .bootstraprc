@@ -82,7 +82,7 @@ styles:
 #  pagination: true
 #  pager: true
 #  labels: true
-#  jumbotron: true
+  jumbotron: true
 #  alert: true
 #  progress: true
 #  media: true
