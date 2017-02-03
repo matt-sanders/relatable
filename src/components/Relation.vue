@@ -1,7 +1,15 @@
 <template>
-  <div class="button relation" @click="handleClick()">
-    <span class="relation-label">{{label}}</span>
-  </div>
+  <span class="btn-group" v-if="!display">
+    <button type="button" class="btn btn-danger btn-sm" v-if="remove" @click="removeFromChain(index)">
+      <i class="material-icons">clear</i>
+    </button>
+    <button type="button" class="btn btn-secondary relation btn-sm" @click="handleClick()">
+      <span class="relation-label">{{label}}</span>
+    </button>
+  </span>
+  <span v-else="display">
+    <span v-if="chain.length > 1 || ( chain.length === 1 && chain[0] !== 0 )">your</span> {{label}}
+  </span>
 </template>
 
 <script>
@@ -22,9 +30,7 @@
      ]),
      handleClick(){
        if ( this.display === true ) return;
-       if ( this.remove === true ){
-         this.removeFromChain(this.index);
-       } else {
+       if ( !this.remove ){
          this.addToChain(this.chain);
        }
      }

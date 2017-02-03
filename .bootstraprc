@@ -71,6 +71,7 @@ styles:
   # Components
 #  animation: true
 #  dropdown: true
+  badge: true
   button-group: true
 #  input-group: true
 #  custom-forms: true
@@ -85,7 +86,7 @@ styles:
 #  alert: true
 #  progress: true
 #  media: true
-#  list-group: true
+  list-group: true
 #  responsive-embed: true
 #  close: true
 
