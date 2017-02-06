@@ -1,22 +1,6 @@
 <template>
   <div id="app">
-    <div class="jumbotron jumbotron-fluid text-center bg-success text-white">
-      <div class="container">
-        <h1 class="display-4">Relatable</h1>
-        <p class="lead">
-          The easiest way to figure out who your mum's cousin's best friend's son is...
-        </p>
-        <hr/>
-        <div class="row justify-content-center">
-          <div class="col-md-8">
-            <p>
-              Relatable is a "relation calculator" built with humans in mind. We don't expect you to know who your 1st cousin twice removed is, or who your great aunt Betty's little grand son Joe is to you, or why you care! Just start plugging your relations into our calculator and we'll do the hard work for you.
-            </p>
-          </div><!-- /col-md-6 -->
-        </div><!-- /row -->
-      </div><!-- /container -->
-    </div><!-- /jumbotron -->
-    <div class="container text-center">
+    <div class="container p-5 text-center" id="calculator-container">
       <div>
         <h3>Add your relatives</h3>
         <relation v-for="option in options" :chain="option"/>
@@ -34,7 +18,6 @@
               <small class="text-muted" v-if="index !== allRelations.length - 1"> or </small>
             </span>
           </h4>
-{{allRelations}}
         </div>
       </div>
     </div>
@@ -89,5 +72,10 @@ export default {
  #app .btn i
  {
    font-size: 0.8em;
+ }
+
+ #main-content
+ {
+   padding-bottom: 0;
  }
 </style>
