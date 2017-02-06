@@ -139,6 +139,14 @@ export function traverseRelation(relationChain, chain = [0]){
     chain[ chain.length - 1 ] += relation[0];
 
     if ( chain.length === 2 && chain[1] <= 0 ){
+      // check if this is just going up to a parent-sibling ( -1,0 ).
+      // if it is we don't want to do any fancy business
+      if ( chain[1] === -1 && relation.length === 2 && relation[1] === 0 ){
+        chain[0]--;
+        chain[1] = 0;
+        return true;
+      }
+      
       // set up a new relation chain for us to work on for these branches
       let newChain = cloneObject(relationChain.slice( idx + 1 ));
       if ( relation.length === 2 ) newChain.unshift( [ relation[1] ] );

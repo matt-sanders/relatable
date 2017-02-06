@@ -18,7 +18,7 @@
     </div><!-- /jumbotron -->
     <div class="container text-center">
       <div>
-        <h3>Add your relations</h3>
+        <h3>Add your relatives</h3>
         <relation v-for="option in options" :chain="option"/>
         <hr/>
         <div v-if="relationChain.length > 0">
@@ -34,6 +34,7 @@
               <small class="text-muted" v-if="index !== allRelations.length - 1"> or </small>
             </span>
           </h4>
+{{allRelations}}
         </div>
       </div>
     </div>

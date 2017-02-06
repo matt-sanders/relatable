@@ -65,6 +65,10 @@ const relationChains = [
   {
     chain: [ [-1], [-2], [0,0], [1] ],
     options: [ '-3,1' ]
+  },
+  {
+    chain: [ [-1], [-1,0], [-1,0], [-1,0] ],
+    options: [ '-4,0' ]
   }
 ];
 
@@ -116,6 +120,7 @@ describe('Utils', () => {
 
   it('traverseRelation()', () => {
     relationChains.forEach( chainObj => {
+      //console.log('-----------------------------------------------');
       let options = traverseRelation( chainObj.chain );
       let mapped = options.map( option => {
         return option.join(',');
