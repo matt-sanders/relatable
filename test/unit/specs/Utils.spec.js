@@ -1,4 +1,4 @@
-import {getFirst, getSecond, getRelationLabel, traverseRelation, cloneObject} from 'src/utils';
+import {getFirst, getSecond, getRelationLabel, traverseRelation, cloneObject, countGreat} from 'src/utils';
 
 const firstRelations = [
   [0, 'You!'],
@@ -21,7 +21,7 @@ const secondRelations = [
   [-1,0, 'Aunt/Uncle'],
   [-2,0, 'Great Aunt/Uncle'],
   [-3,0, 'Great Great Aunt/Uncle'],
-  [-4,0, 'Great Great Great Aunt/Uncle'],
+  [-4,0, '3rd Great Aunt/Uncle'],
   [-1,1, '1st Cousin'],
   [-1,2, '1st Cousin once removed'],
   [-1,3, '1st Cousin twice removed'],
@@ -68,7 +68,20 @@ const relationChains = [
   }
 ];
 
+const countGreats = [
+  ['Great Great Grand Parent', 'Great Great Grand Parent'],
+  ['Great Great Great Grand Parent', '3rd Great Grand Parent'],
+  ['Great Great Great Great Aunt', '4th Great Aunt']
+];
+
 describe('Utils', () => {
+  it('countGreat()', () => {
+    countGreats.forEach( great => {
+      let newGreat = countGreat( great[0] );
+      expect( newGreat ).to.equal( great[1] );
+    });
+  });
+  
   it('getFirst()', () => {
     firstRelations.forEach( rel => {
       expect( getFirst( [ rel[0] ] ) ).to.equal( rel[1] );

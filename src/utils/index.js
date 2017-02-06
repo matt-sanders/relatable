@@ -1,6 +1,18 @@
 import numeral from 'numeral';
 
 /**
+ * Given a string like 'Great Great Great Grand Parent' should change it to '3rd Great Grand Parent'
+ * @arg {str} string
+ */
+export function countGreat(str){
+  //count the greats
+  let matches = str.match(/Great/g);
+  if ( !matches || matches.length < 3 ) return str;
+  let newStr = str.replace(/Great /g, '');
+  return numeral(matches.length).format('Oo') + ' Great ' + newStr;
+}
+
+/**
  * Given a chain of descendants it should return the first line of descent
  * E.g passing [1] should return 'Parent', [3] -> Great Grand Parent.
  * @arg {chain} array
@@ -21,7 +33,7 @@ export function getFirst(chain = [0]){
     parts.unshift(i === 1 ? 'Grand' : 'Great')
   }
   
-  return parts.join(' ')
+  return countGreat( parts.join(' ') );
 }
 
 /**
@@ -80,7 +92,7 @@ export function getSecond(chain = [0, 0]){
     }
   }
   
-  return parts.join(' ');
+  return countGreat( parts.join(' ') );
 }
 
 /**
