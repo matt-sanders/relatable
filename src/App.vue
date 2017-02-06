@@ -2,7 +2,7 @@
   <div id="app">
     <div class="container p-5 text-center" id="calculator-container">
       <div>
-        <h3>Add your relatives</h3>
+        <h3>Add your common relatives</h3>
         <relation v-for="option in options" :chain="option"/>
         <hr/>
         <div v-if="relationChain.length > 0">
