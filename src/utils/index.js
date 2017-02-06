@@ -1,3 +1,5 @@
+import numeral from 'numeral';
+
 /**
  * Given a chain of descendants it should return the first line of descent
  * E.g passing [1] should return 'Parent', [3] -> Great Grand Parent.
@@ -57,11 +59,25 @@ export function getSecond(chain = [0, 0]){
     let positiveFirst = Math.abs(first);
     
     // first cousin etc
-    if (second <= positiveFirst) parts.unshift(second);
-    if (second > positiveFirst) parts.unshift(positiveFirst);
+    if (second <= positiveFirst) parts.unshift( numeral(second).format('Oo') );
+    if (second > positiveFirst) parts.unshift( numeral(positiveFirst).format('Oo') );
     // once removed etc
-    if (second < positiveFirst) parts.push(`${positiveFirst - second} removed`);
-    if (second > positiveFirst) parts.push(`${second - positiveFirst} removed`);
+    if (second !== positiveFirst ){
+      let removedMod = (second < positiveFirst) ? positiveFirst - second : second - positiveFirst;
+      let removedText;
+      switch ( removedMod ){
+        case 1:
+          removedText = 'once';
+          break;
+        case 2:
+          removedText = 'twice';
+          break;
+        default:
+          removedText = `${removedMod} times`;
+          break;
+      }
+      parts.push(`${removedText} removed`);
+    }
   }
   
   return parts.join(' ');

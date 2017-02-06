@@ -22,14 +22,15 @@ const secondRelations = [
   [-2,0, 'Great Aunt/Uncle'],
   [-3,0, 'Great Great Aunt/Uncle'],
   [-4,0, 'Great Great Great Aunt/Uncle'],
-  [-1,1, '1 Cousin'],
-  [-1,2, '1 Cousin 1 removed'],
-  [-1,3, '1 Cousin 2 removed'],
-  [-3,1, '1 Cousin 2 removed'],
-  [-3,2, '2 Cousin 1 removed'],
-  [-3,3, '3 Cousin'],
-  [-3,4, '3 Cousin 1 removed'],
-  [-3,5, '3 Cousin 2 removed']
+  [-1,1, '1st Cousin'],
+  [-1,2, '1st Cousin once removed'],
+  [-1,3, '1st Cousin twice removed'],
+  [-3,1, '1st Cousin twice removed'],
+  [-3,2, '2nd Cousin once removed'],
+  [-3,3, '3rd Cousin'],
+  [-3,4, '3rd Cousin once removed'],
+  [-3,5, '3rd Cousin twice removed'],
+  [-1,4, '1st Cousin 3 times removed']
 ];
 
 const relationChains = [
