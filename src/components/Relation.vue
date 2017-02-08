@@ -3,6 +3,9 @@
     <button type="button" class="btn btn-danger btn-sm" v-if="remove" @click="removeFromChain(index)">
       <i class="material-icons">clear</i>
     </button>
+    <button type="button" class="btn btn-primary" v-if="!remove" @click="handleClick()">
+      <i class="material-icons">add</i>
+    </button>
     <button type="button" class="btn btn-secondary relation" v-bind:class="{'btn-sm': remove}" @click="handleClick()">
       <span class="relation-label" v-if="pluralise">{{label}}'s</span>
       <span class="relation-label" v-else>{{label}}</span>

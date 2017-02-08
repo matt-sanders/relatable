@@ -3,6 +3,7 @@
     <div class="container p-5 text-center" id="calculator-container">
       <div>
         <h3>Add your common relatives</h3>
+        <p class="text-center">e.g. If you want to find out how you're related to your mother's cousin's son, add "Parent", "Cousin", "Child" in that order.</p>
         <relation v-for="option in options" :chain="option"/>
         <hr/>
         <div v-if="relationChain.length > 0">
@@ -58,6 +59,17 @@ export default {
 </script>
 
 <style>
+ html,
+ body
+ {
+   height: 100%;
+ }
+
+ #app
+ {
+   min-height: 100%;
+ }
+ 
  #app .btn,
  #app .btn-group
  {
