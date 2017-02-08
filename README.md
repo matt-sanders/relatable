@@ -1,6 +1,6 @@
-# relatable
+# Relatable
 
-> The easiest relative calculator yet!
+Relatable is a "cousin calculator" build to make figuring out how all your relatives fit in super easy. Try it out <a href="https://matt-sanders.github.io/relatable/">here.</a>
 
 ## Build Setup
 
