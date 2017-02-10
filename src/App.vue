@@ -1,24 +1,30 @@
 <template>
   <div id="app">
-    <div class="container p-5 text-center" id="calculator-container">
+    <div class="container pt-3 p-5-md text-center" id="calculator-container">
       <div>
         <h3>Add your common relatives</h3>
         <p class="text-center">e.g. If you want to find out how you're related to your mother's cousin's son, add "Parent", "Cousin", "Child" in that order.</p>
-        <relation v-for="option in options" :chain="option"/>
+        <div class="options">
+          <relation v-for="option in options" :chain="option"/>
+        </div>
         <hr/>
-        <div v-if="relationChain.length > 0">
-          <h4>
-            Your:
-            <relation v-for="(link, index) in relationChain" :chain="link" :remove="true" :index="index" :pluralise="index < relationChain.length - 1"/>
-          </h4>
-          
-          <h4>
-            Is:
-            <span v-for="(relation, index) in allRelations">
-              <relation :chain="relation" :display="true" class="text-success" />
-              <small class="text-muted" v-if="index !== allRelations.length - 1"> or </small>
-            </span>
-          </h4>
+        <div v-if="relationChain.length > 0" class="results">
+          <div class="result-chain">
+            <h4>
+              Your:
+              <relation v-for="(link, index) in relationChain" :chain="link" :remove="true" :index="index" :pluralise="index < relationChain.length - 1"/>
+            </h4>
+          </div>
+
+          <div class="result-labels">
+            <h4>
+              Is:
+              <span v-for="(relation, index) in allRelations">
+                <relation :chain="relation" :display="true" class="text-success" />
+                <small class="text-muted" v-if="index !== allRelations.length - 1"> or </small>
+              </span>
+            </h4>
+          </div>
         </div>
       </div>
     </div>
@@ -89,5 +95,19 @@ export default {
  #main-content
  {
    padding-bottom: 0;
+ }
+
+ @media screen and ( max-width: 768px ){
+   #app .options .btn
+   {
+     padding: 3px 10px;
+     font-size: 0.875rem;
+   }
+
+   #app .results h4
+   {
+     font-size: 1.2rem;
+   }
+
  }
 </style>

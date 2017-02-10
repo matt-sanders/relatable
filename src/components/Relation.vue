@@ -1,7 +1,7 @@
 <template>
   <span class="btn-group" v-if="!display">
-    <button type="button" class="btn btn-danger btn-sm" v-if="remove" @click="removeFromChain(index)">
-      <i class="material-icons">clear</i>
+    <button type="button" class="btn btn-danger btn-sm close" v-if="remove" @click="removeFromChain(index)">
+      <span>&times;</span>
     </button>
     <button type="button" class="btn btn-primary" v-if="!remove" @click="handleClick()">
       <i class="material-icons">add</i>
