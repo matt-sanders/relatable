@@ -69,6 +69,10 @@ const relationChains = [
   {
     chain: [ [-1], [-1,0], [-1,0], [-1,0] ],
     options: [ '-4,0' ]
+  },
+  {
+    chain: [ [2], [-1, 1] ],
+    options: [ '0,2' ]
   }
 ];
 
