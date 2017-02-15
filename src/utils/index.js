@@ -112,11 +112,67 @@ export function cloneObject(object){
 }
 
 /**
+ * Given a chain link it should give you the ID of that chain.
+ * @arg {chain} object
+ */
+export function getChainID( chain = { sex: false, distance: [0] }, includeSex = true ){
+  let ID = [ ...chain.distance ];
+  if ( chain.sex && includeSex ) ID.push( chain.sex );
+  return ID.join(',');
+}
+
+/**
  * Give a chain of relations it should figure out all the possible combinations of how they are eventually related to you
  * @arg {relationChain} array
- * @arg {chain} array
+ * @arg {chain} object
+ * @arg {sexes} object
+ * @arg {debug} bool
  */
-export function traverseRelation(relationChain, chain = [0]){
+export function traverseRelation( relationChain, chain = { sex: false, distance: [0] }, sexes = {}, debug = false ){
+  if ( debug ) console.log( '--------------------- TRAVERSAL ----------------------' );
+  if ( debug ) {
+    console.log('relationChain: ', relationChain);
+    console.log('chain: ', chain);
+    console.log('sexes: ', sexes);
+  }
+  //the total chain
+  let chains = [];
+
+  let distance = chain.distance;
+  let singleDistance = distance.length === 1;
+
+  // go through each step of the relation chain
+  relationChain.forEach( ( relation, idx ) => {
+    if ( debug ) console.log('==== RELATION:', relation );
+    
+    let relDistance = relation.distance;
+    let singleRelDistance = relDistance.length === 1;
+    distance[0] += relDistance[0];
+    
+    if ( debug ) console.log('1: ', distance );
+
+    if ( !singleRelDistance ){
+      // if there is a second link in the relatives chain but we don't have one in our chain, add it in
+      if ( distance[0] <= 0 && singleDistance ) {
+        distance.push(0);
+      }
+
+      distance[ distance.length - 1] += relDistance[1];
+    }
+    
+    // apply the sex to this distance
+    chain.sex = relation.sex;
+    let chainID = getChainID( chain, false );
+    if ( chain.sex && !(chainID in sexes) ){
+      sexes[ chainID ] = chain.sex + '';
+    }
+  });
+
+  chains.push( chain );
+  return chains;
+}
+
+export function oldTraverseRelation(relationChain, chain = [0]){
   // -1 is a parent
   // 0 is a sibling
   // 1 is a child
