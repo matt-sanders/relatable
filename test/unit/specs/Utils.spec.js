@@ -148,6 +148,28 @@ const relationChains = [
       }
     ],
     options: [ '-1,f', '-1,0,f' ]
+  },
+  {
+    //mums, mums, sons, child
+    chain: [
+      {
+        sex: 'f',
+        distance: [-1]
+      },
+      {
+        sex: 'f',
+        distance: [-1]
+      },
+      {
+        sex: 'm',
+        distance: [1]
+      },
+      {
+        sex: false,
+        distance: [1]
+      }
+    ],
+    options: [ '-1,1' ]
   }
 ];
 

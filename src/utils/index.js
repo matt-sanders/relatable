@@ -141,6 +141,19 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
   let distance = chain.distance;
   let singleDistance = distance.length === 1;
 
+  // if we're coming down from 3 for example
+  // we want '2', '2,0', '1', '1,0' so get all of those
+  if ( singleDistance && distance[0] < 0 ){
+    if ( debug ) console.log('==== RUN DOWN');
+    for ( let i = -1; i > distance[0]; i-- ){
+      let newChain = cloneObject(relationChain);
+      newChain[0][ newChain[0].length - 1 ]--;
+      let extraChains = traverseRelation( newChain, { sex: chain.sex, distance: [i,0] }, sexes, debug );
+      if ( debug ) console.log(extraChains);
+      chains.push( ...extraChains );
+    }
+  }
+
   // go through each step of the relation chain
   relationChain.forEach( ( relation, idx ) => {
     if ( debug ) console.log('==== RELATION:', relation );
