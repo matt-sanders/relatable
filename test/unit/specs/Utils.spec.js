@@ -72,7 +72,7 @@ const relationChains = [
   },
   {
     chain: [ [2], [-1, 1] ],
-    options: [ '0,2' ]
+    options: [ '2' ]
   }
 ];
 

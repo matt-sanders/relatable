@@ -179,8 +179,8 @@ export function traverseRelation(relationChain, chain = [0]){
     if ( relation.length === 2 ){
       if ( chain[0] <= 0 || chain.length === 2 ){
         if ( chain.length === 1 ) chain.push(0);
-        chain[1] += relation[1];
       }
+      chain[ chain.length - 1 ] += relation[1];
     }
   });
 
