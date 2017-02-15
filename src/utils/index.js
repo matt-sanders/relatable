@@ -147,7 +147,7 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
   // we want '2', '2,0', '1', '1,0' so get all of those
   if ( singleDistance && distance[0] < 0 ){
     if ( debug ) console.log('==== RUN DOWN ', distance);
-    for ( let i = -1; i >= distance[0]; i-- ){
+    for ( let i = -1; i > distance[0]; i-- ){
       let newChain = cloneObject(relationChain);
       if ( newChain[0] ) newChain[0].distance[ newChain[0].distance.length - 1 ]--;
       let extraChains = traverseRelation( newChain, { sex: chain.sex, distance: [i,0] }, sexes, debug, seen );
@@ -189,7 +189,7 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
         distanceDupe[0] -= Math.abs(distanceDupe[1]);
         distanceDupe.splice(-1,1);
         if ( !singleRelDistance ) {
-          newChain[0][0]--;
+          newChain[0].distance[0]--;
           distanceDupe[0]++;
         } else {
           chain.distance = distanceDupe;
@@ -202,6 +202,7 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
       }
       //start the modified branch
       if ( newChain.length > 0 ){
+        if ( debug ) console.log('==== A: Begin Traverse');
         let extraChains = traverseRelation(newChain, { sex: chain.sex, distance: distanceDupe }, sexes, debug, seen);
         chains.push( ...extraChains );
       }
@@ -228,6 +229,7 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
     // if we are going down the child tree and there are no siblings specified then specify them
     // e.g. say we are at [-2] and the next relation is [1]. That could be [-1] or [-1,0] so continue with both of them
     if ( singleDistance && distance[0] < 0 && singleRelDistance && relDistance[0] > 0 ){
+      if ( debug ) console.log('==== B: Begin Traverse');
       let newChain = cloneObject(relationChain.slice( idx + 1 ));
       let extraChains = traverseRelation( newChain, { sex: chain.sex, distance: [ ...distance, 0 ] }, sexes, debug , seen);
       chains.push( ...extraChains );
@@ -250,21 +252,39 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
     console.log(addChain);
   }
   let fullChainID = getChainID( chain );
-  if ( seen.indexOf( fullChainID < 0 ) && distance[0] > 0 || ( (distance[0] <= 0 && addChain ) && !( chainID in sexes ) || ( chain.sex && sexes[chainID] === chain.sex ) || !chain.sex ) ) chains.push( chain );
+  // criteria for acceptance:
+  // 1. it's full chainID hasn't been seen && it's first distance > 0 implying it's a child. In this case the exclusion of sex doesn't really matter. 
+  // 2. it's an ancestor of some sort and addChain is true
+  // 3. it's chainID isn't in sexes OR it's chainID is in sexes and the sex matches OR there's no sex
+  // 4. this is a sibling of an ancestor, in which case the sex is irrelevant
+  if (
+    ( seen.indexOf( fullChainID < 0 ) && distance[0] > 0 ) ||
+    (
+      (distance[0] <= 0 && addChain ) &&
+      !( chainID in sexes ) ||
+      ( chain.sex && sexes[chainID] === chain.sex ) ||
+      !chain.sex
+    ) ||
+    !singleDistance
+  ) chains.push( chain );
   seen.push( fullChainID );
 
   //add our sibling if we are an option
-  chains.forEach( singleChain => {
-    if ( getChainID( singleChain, false ) !== '0' ) return;
-    let seenSibling = seen.indexOf('0,0') > -1 || seen.indexOf('0,0,f') > -1 || seen.indexOf('0,0,m') > -1;
-    if ( !seenSibling ){
-      chains.push({
-        sex: singleChain.sex,
-        distance: [0,0]
-      });
-    }
-  });
-  if ( chains.length > 1 && seen.indexOf( '0' ) > -1 && seen.indexOf('0,0') === -1) chains.push( { sex: chain.sex, distance: [0,0] } );
+  if ( chains.length > 1 ){
+    chains.forEach( singleChain => {
+      if ( getChainID( singleChain, false ) !== '0' ) return;
+      let seenSibling = seen.indexOf('0,0') > -1 || seen.indexOf('0,0,f') > -1 || seen.indexOf('0,0,m') > -1;
+      if ( !seenSibling ){
+        let sibling = {
+          sex: singleChain.sex,
+          distance: [0,0]
+        };
+        chains.push(sibling);
+        seen.push( getChainID( sibling ) );
+      }
+    });
+  }
+  if ( debug ) console.log( '---- END TRAVERSE ----' );
   return chains;
 }
 
