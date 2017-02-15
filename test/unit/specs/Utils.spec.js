@@ -212,6 +212,220 @@ const relationChains = [
       }
     ],
     options: ['0,f', '0,0,f', '-1,1,f' ]
+  },
+  {
+    //cousins grandparent
+    chain: [
+      {
+        sex: false,
+        distance: [-1,1]
+      },
+      {
+        sex: false,
+        distance: [-2]
+      }
+    ],
+    options: [ '-2' ]
+  },
+  {
+    //cousins grandparent(M)
+    chain: [
+      {
+        sex: false,
+        distance: [-1,1]
+      },
+      {
+        sex: 'm',
+        distance: [-2]
+      }
+    ],
+    options: [ '-2,m' ]
+  },
+  {
+    //grandparents nephew, 1st cuz 1nce removed
+    chain: [
+      {
+        sex: false,
+        distance: [-2,1]
+      },
+      {
+        sex: false,
+        distance: [-1,2]
+      }
+    ],
+    options: [ '0', '0,0', '-1,1', '-2,2' ]
+  },
+  {
+    //grandparents nephew(M), 1st cuz 1nce removed
+    chain: [
+      {
+        sex: 'm',
+        distance: [-2,1]
+      },
+      {
+        sex: false,
+        distance: [-1,2]
+      }
+    ],
+    options: [ '0', '0,0', '-1,1', '-2,2' ]
+  },
+  {
+    //grandparents nephew, 2nd cousin
+    chain: [
+      {
+        sex: false,
+        distance:[-2,1]
+      },
+      {
+        sex: false,
+        distance: [-2,2]
+      }
+    ],
+    options: [ '-1', '-1,0', '-2,1' ]
+  },
+  {
+    //parents, grandparents, siblings, child
+    chain: [
+      {
+        sex: false,
+        distance: [-1]
+      },
+      {
+        sex: false,
+        distance: [-2]
+      },
+      {
+        sex: false,
+        distance: [0,0]
+      },
+      {
+        sex: false,
+        distance: [1]
+      }
+    ],
+    options: [ '-3,1' ]
+  },
+  {
+    //Mums, grandmother, brothers, son
+    chain: [
+      {
+        sex: 'f',
+        distance: [-1]
+      },
+      {
+        sex: 'f',
+        distance: [-2]
+      },
+      {
+        sex: 'm',
+        distance: [0,0]
+      },
+      {
+        sex: 'm',
+        distance: [1]
+      }
+    ],
+    options: [ '-3,1,m' ]
+  },
+  {
+    //parents, aunty/uncle, aunty/uncle, aunty/uncle
+    chain: [
+      {
+        sex: false,
+        distance: [-1]
+      },
+      {
+        sex: false,
+        distance: [-1,0]
+      },
+      {
+        sex: false,
+        distance: [-1,0]
+      },
+      {
+        sex: false,
+        distance: [-1,0]
+      }
+    ],
+    options: [ '-4,0' ]
+  },
+  {
+    //fathers, aunty, uncle, aunty
+    chain: [
+      {
+        sex: 'm',
+        distance: [-1]
+      },
+      {
+        sex: 'f',
+        distance: [-1,0]
+      },
+      {
+        sex: 'm',
+        distance: [-1,0]
+      },
+      {
+        sex: 'f',
+        distance: [-1,0]
+      }
+    ],
+    options: [ '-4,0,f' ]
+  },
+  {
+    //grandchilds cousin
+    chain: [
+      {
+        sex: false,
+        distance: [2]
+      },
+      {
+        sex: false,
+        distance: [-1, 1]
+      }
+    ],
+    options: [ '2' ]
+  },
+  {
+    //grandsons cousin
+    chain: [
+      {
+        sex: 'm',
+        distance: [2]
+      },
+      {
+        sex: false,
+        distance: [-1, 1]
+      }
+    ],
+    options: [ '2' ]
+  },
+  {
+    //childs cousin
+    chain: [
+      {
+        sex: false,
+        distance: [1]
+      },
+      {
+        sex: false,
+        distance: [-1, 1]
+      }
+    ],
+    options: [ '0,1' ]
+  },    
+  {
+    //daughters cousin
+    chain: [
+      {
+        sex: 'f',
+        distance: [1]
+      },
+      {
+        sex: false,
+        distance: [-1, 1]
+      }
+    ],
+    options: [ '0,1' ]
   }
 ];
 

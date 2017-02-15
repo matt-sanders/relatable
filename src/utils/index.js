@@ -127,9 +127,8 @@ export function getChainID( chain = { sex: false, distance: [0] }, includeSex = 
  * @arg {chain} object
  * @arg {sexes} object
  * @arg {debug} bool
- * @arg {seen} array
  */
-export function traverseRelation( relationChain, chain = { sex: false, distance: [0] }, sexes = {}, debug = false, seen = [] ){
+export function traverseRelation( relationChain, chain = { sex: false, distance: [0] }, sexes = {}, debug = false ){
   if ( debug ) console.log( '--------------------- TRAVERSAL ----------------------' );
   if ( debug ) {
     console.log('relationChain: ', relationChain);
@@ -150,7 +149,7 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
     for ( let i = -1; i > distance[0]; i-- ){
       let newChain = cloneObject(relationChain);
       if ( newChain[0] ) newChain[0].distance[ newChain[0].distance.length - 1 ]--;
-      let extraChains = traverseRelation( newChain, { sex: chain.sex, distance: [i,0] }, sexes, debug, seen );
+      let extraChains = traverseRelation( newChain, { sex: chain.sex, distance: [i,0] }, sexes, debug );
       if ( debug ) console.log(extraChains);
       chains.push( ...extraChains );
     }
@@ -203,7 +202,7 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
       //start the modified branch
       if ( newChain.length > 0 ){
         if ( debug ) console.log('==== A: Begin Traverse');
-        let extraChains = traverseRelation(newChain, { sex: chain.sex, distance: distanceDupe }, sexes, debug, seen);
+        let extraChains = traverseRelation(newChain, { sex: chain.sex, distance: distanceDupe }, sexes, debug );
         chains.push( ...extraChains );
       }
     }
@@ -231,7 +230,7 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
     if ( singleDistance && distance[0] < 0 && singleRelDistance && relDistance[0] > 0 ){
       if ( debug ) console.log('==== B: Begin Traverse');
       let newChain = cloneObject(relationChain.slice( idx + 1 ));
-      let extraChains = traverseRelation( newChain, { sex: chain.sex, distance: [ ...distance, 0 ] }, sexes, debug , seen);
+      let extraChains = traverseRelation( newChain, { sex: chain.sex, distance: [ ...distance, 0 ] }, sexes, debug );
       chains.push( ...extraChains );
     }
 
@@ -251,14 +250,14 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
     console.log(chain);
     console.log(addChain);
   }
-  let fullChainID = getChainID( chain );
+  
   // criteria for acceptance:
-  // 1. it's full chainID hasn't been seen && it's first distance > 0 implying it's a child. In this case the exclusion of sex doesn't really matter. 
+  // 1. it's first distance > 0 implying it's a child. In this case the exclusion of sex doesn't really matter. 
   // 2. it's an ancestor of some sort and addChain is true
   // 3. it's chainID isn't in sexes OR it's chainID is in sexes and the sex matches OR there's no sex
   // 4. this is a sibling of an ancestor, in which case the sex is irrelevant
   if (
-    ( seen.indexOf( fullChainID < 0 ) && distance[0] > 0 ) ||
+    ( distance[0] > 0 ) ||
     (
       (distance[0] <= 0 && addChain ) &&
       !( chainID in sexes ) ||
@@ -267,25 +266,35 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
     ) ||
     !singleDistance
   ) chains.push( chain );
-  seen.push( fullChainID );
+
+  //get only unique chains
+  let seenChains = [];
+  let finalChains = [];
+  
+  chains.forEach( singleChain => {
+    let chainID = getChainID( singleChain );
+    if ( seenChains.indexOf( chainID ) === -1 ){
+      seenChains.push( chainID );
+      finalChains.push( singleChain );
+    }    
+  });
 
   //add our sibling if we are an option
-  if ( chains.length > 1 ){
-    chains.forEach( singleChain => {
-      if ( getChainID( singleChain, false ) !== '0' ) return;
-      let seenSibling = seen.indexOf('0,0') > -1 || seen.indexOf('0,0,f') > -1 || seen.indexOf('0,0,m') > -1;
-      if ( !seenSibling ){
-        let sibling = {
-          sex: singleChain.sex,
-          distance: [0,0]
-        };
-        chains.push(sibling);
-        seen.push( getChainID( sibling ) );
+  if ( finalChains.length > 1 ){
+    finalChains.some( singleChain => {
+      if ( getChainID( singleChain, false ) !== '0' ) return false;
+      let sibling = {
+        sex: singleChain.sex,
+        distance: [0,0]
+      };
+      let siblingID = getChainID( sibling );
+      if ( seenChains.indexOf( siblingID ) < 0 ){
+        finalChains.push( sibling );
       }
     });
   }
   if ( debug ) console.log( '---- END TRAVERSE ----' );
-  return chains;
+  return finalChains;
 }
 
 export function oldTraverseRelation(relationChain, chain = [0]){
