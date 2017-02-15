@@ -170,6 +170,48 @@ const relationChains = [
       }
     ],
     options: [ '-1,1' ]
+  },
+  {
+    //siblings child
+    chain: [
+      {
+        sex: false,
+        distance: [0,0]
+      },
+      {
+        sex: false,
+        distance: [1]
+      }
+    ],
+    options: ['0,1']
+  },
+  {
+    //cousins cousin
+    chain: [
+      {
+        sex: false,
+        distance: [-1,1]
+      },
+      {
+        sex: false,
+        distance: [-1,1]
+      }
+    ],
+    options: ['0', '0,0', '-1,1' ]
+  },
+  {
+    //cousins(M) cousin(F)
+    chain: [
+      {
+        sex: 'm',
+        distance: [-1,1]
+      },
+      {
+        sex: 'f',
+        distance: [-1,1]
+      }
+    ],
+    options: ['0,f', '0,0,f', '-1,1,f' ]
   }
 ];
 
@@ -226,8 +268,8 @@ describe('Utils', () => {
   });
 
   it('traverseRelation()', () => {
-    relationChains.forEach( chainObj => {
-      console.log("\n", '-----------------------------------------------');
+    relationChains.forEach( ( chainObj, idx ) => {
+      console.log("\n\n", idx+'-----------------------------------------------');
       let options = traverseRelation( chainObj.chain, { sex: false, distance: [0] }, {}, true );
       console.log('----');
       let mapped = options.map( option => {

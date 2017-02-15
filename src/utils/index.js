@@ -127,8 +127,9 @@ export function getChainID( chain = { sex: false, distance: [0] }, includeSex = 
  * @arg {chain} object
  * @arg {sexes} object
  * @arg {debug} bool
+ * @arg {seen} array
  */
-export function traverseRelation( relationChain, chain = { sex: false, distance: [0] }, sexes = {}, debug = false ){
+export function traverseRelation( relationChain, chain = { sex: false, distance: [0] }, sexes = {}, debug = false, seen = [] ){
   if ( debug ) console.log( '--------------------- TRAVERSAL ----------------------' );
   if ( debug ) {
     console.log('relationChain: ', relationChain);
@@ -137,6 +138,7 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
   }
   //the total chain
   let chains = [];
+  let addChain = true;
 
   let distance = chain.distance;
   let singleDistance = distance.length === 1;
@@ -144,44 +146,125 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
   // if we're coming down from 3 for example
   // we want '2', '2,0', '1', '1,0' so get all of those
   if ( singleDistance && distance[0] < 0 ){
-    if ( debug ) console.log('==== RUN DOWN');
-    for ( let i = -1; i > distance[0]; i-- ){
+    if ( debug ) console.log('==== RUN DOWN ', distance);
+    for ( let i = -1; i >= distance[0]; i-- ){
       let newChain = cloneObject(relationChain);
-      newChain[0][ newChain[0].length - 1 ]--;
-      let extraChains = traverseRelation( newChain, { sex: chain.sex, distance: [i,0] }, sexes, debug );
+      if ( newChain[0] ) newChain[0].distance[ newChain[0].distance.length - 1 ]--;
+      let extraChains = traverseRelation( newChain, { sex: chain.sex, distance: [i,0] }, sexes, debug, seen );
       if ( debug ) console.log(extraChains);
       chains.push( ...extraChains );
     }
   }
 
   // go through each step of the relation chain
-  relationChain.forEach( ( relation, idx ) => {
+  relationChain.some( ( relation, idx ) => {
     if ( debug ) console.log('==== RELATION:', relation );
     
     let relDistance = relation.distance;
     let singleRelDistance = relDistance.length === 1;
-    distance[0] += relDistance[0];
+    distance[ distance.length - 1 ] += relDistance[0];
     
     if ( debug ) console.log('1: ', distance );
+
+    if ( !singleDistance && distance[1] <= 0 ){
+      // check if this is just going up to a parent-sibling ( -1,0 ).
+      // if it is we don't want to do any fancy business
+      if ( distance[1] === -1 && !singleRelDistance && relDistance[1] === 0 ){
+        distance[0]--;
+        distance[1] = 0;
+        //return but still iterate to the next relation
+        return false;
+      }
+
+      // set up a new relation chain for us to work on for these branches
+      let newChain = cloneObject(relationChain.slice( idx + 1 ));
+      if ( !singleRelDistance ) newChain.unshift( { sex: relation.sex, distance: [ relDistance[1] ] } );
+      let distanceDupe;
+
+      // if we've gone into the negatives for the child branch
+      // we need to move up a parent
+      // e.g. -2,-1 becomes -3
+      if ( distance[1] < 0 ){
+        distanceDupe = cloneObject( distance );
+        distanceDupe[0] -= Math.abs(distanceDupe[1]);
+        distanceDupe.splice(-1,1);
+        if ( !singleRelDistance ) {
+          newChain[0][0]--;
+          distanceDupe[0]++;
+        } else {
+          chain.distance = distanceDupe;
+          distance = chain.distance;
+          singleDistance = distance.length === 1;
+        }
+      } else {
+        //duplicate the chain
+        distanceDupe = cloneObject(distance.slice(0, 1));
+      }
+      //start the modified branch
+      if ( newChain.length > 0 ){
+        let extraChains = traverseRelation(newChain, { sex: chain.sex, distance: distanceDupe }, sexes, debug, seen);
+        chains.push( ...extraChains );
+      }
+    }
 
     if ( !singleRelDistance ){
       // if there is a second link in the relatives chain but we don't have one in our chain, add it in
       if ( distance[0] <= 0 && singleDistance ) {
         distance.push(0);
+        singleDistance = false;
       }
-
-      distance[ distance.length - 1] += relDistance[1];
+      distance[ distance.length - 1 ] += relDistance[1];
     }
+
+    if ( debug ) console.log('2: ', distance);
     
     // apply the sex to this distance
     chain.sex = relation.sex;
     let chainID = getChainID( chain, false );
     if ( chain.sex && !(chainID in sexes) ){
-      sexes[ chainID ] = chain.sex + '';
+      sexes[ chainID ] = chain.sex;
+    }
+
+    // if we are going down the child tree and there are no siblings specified then specify them
+    // e.g. say we are at [-2] and the next relation is [1]. That could be [-1] or [-1,0] so continue with both of them
+    if ( singleDistance && distance[0] < 0 && singleRelDistance && relDistance[0] > 0 ){
+      let newChain = cloneObject(relationChain.slice( idx + 1 ));
+      let extraChains = traverseRelation( newChain, { sex: chain.sex, distance: [ ...distance, 0 ] }, sexes, debug , seen);
+      chains.push( ...extraChains );
+    }
+
+    // if the sex of this chain is incompatible then break out and don't add it
+    if ( ( chainID in sexes ) && chain.sex !== sexes[ chainID ] ) {
+      addChain = false;
+      return true;
     }
   });
 
-  chains.push( chain );
+  // if we get to a point in the chain that already exists but has a different sex then don't add it
+  // this is to stop things like "My mums mums sons son" this can obviously not be you.
+  let chainID = getChainID( chain, false );
+  if ( debug ){
+    console.log('==== BEFORE PUSH: ');
+    console.log(sexes);
+    console.log(chain);
+    console.log(addChain);
+  }
+  let fullChainID = getChainID( chain );
+  if ( seen.indexOf( fullChainID < 0 ) && distance[0] > 0 || ( (distance[0] <= 0 && addChain ) && !( chainID in sexes ) || ( chain.sex && sexes[chainID] === chain.sex ) || !chain.sex ) ) chains.push( chain );
+  seen.push( fullChainID );
+
+  //add our sibling if we are an option
+  chains.forEach( singleChain => {
+    if ( getChainID( singleChain, false ) !== '0' ) return;
+    let seenSibling = seen.indexOf('0,0') > -1 || seen.indexOf('0,0,f') > -1 || seen.indexOf('0,0,m') > -1;
+    if ( !seenSibling ){
+      chains.push({
+        sex: singleChain.sex,
+        distance: [0,0]
+      });
+    }
+  });
+  if ( chains.length > 1 && seen.indexOf( '0' ) > -1 && seen.indexOf('0,0') === -1) chains.push( { sex: chain.sex, distance: [0,0] } );
   return chains;
 }
 
