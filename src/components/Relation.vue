@@ -1,8 +1,14 @@
 <template>
-  <span class="btn-group" v-if="!display">
-    <button type="button" class="btn btn-danger btn-sm close" v-if="remove" @click="removeFromChain(index)">
+  <span class="btn-group rounded" v-if="!display && remove">
+    <button type="button" class="btn btn-danger btn-sm close" @click="removeFromChain(index)">
       <span>&times;</span>
     </button>
+    <button type="button" class="btn btn-secondary relation" v-bind:class="{'btn-sm': remove}" @click="handleClick()">
+      <span class="relation-label" v-if="pluralise">{{label}}'s</span>
+      <span class="relation-label" v-else>{{label}}</span>
+    </button>
+  </span>
+  <span class="btn-group rounded-md" v-else-if="!display && !remove">
     <button type="button" class="btn btn-primary" v-if="!remove" @click="handleClick()">
       <i class="material-icons">add</i>
     </button>

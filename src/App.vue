@@ -5,18 +5,20 @@
         <h3>Add your common relatives</h3>
         <p class="text-center">e.g. If you want to find out how you're related to your mother's cousin's son, add "Mother", "Cousin", "Son" in that order.</p>
         <div class="row">
-          <div class="col-md-6">
-            <div class="list-group options">
+          <div class="col-md-6 options ">
+            <div class="list-group">
               <div class="list-group-item" v-for="option in options">
                 <div class="d-flex w-100">
                   <h5 class="mb-1">{{option.label}}</h5>
                 </div>
-                <relation v-for="relation in option.relations" :chain="relation"/>
+                <div class="text-left w-100">
+                  <relation v-for="relation in option.relations" :chain="relation"/>
+                </div>
               </div>
             </div>
           </div>
           <div class="col-md-6">
-            <div v-if="relationChain.length > 0" class="results">
+            <div v-if="relationChain.length > 0" class="results rounded">
               <div class="result-chain">
                 <h4>
                   Your:
@@ -39,7 +41,6 @@
           </div><!--end col -->
         </div><!--end row-->
         <div class="clearfix"></div>
-        <hr class="hidden-md-down"/>
         
       </div>
     </div>
@@ -185,6 +186,44 @@ export default {
    padding-bottom: 0;
  }
 
+ #app .btn-group.rounded .btn-secondary
+ {
+   border: none;
+   background: none;
+   box-shadow: none;
+ }
+
+ #app .btn-group.rounded .btn:first-child
+ {
+   border-radius: 50%;
+ }
+
+ #app .result-chain-list
+ {
+   display: block;
+ }
+
+ #app .result-chain .btn
+ {
+   padding: 0 5px;
+ }
+
+ #app .result-chain .btn-danger
+ {
+   width: 15px;
+   height: 15px;
+   line-height: 15px;
+   padding: 0;
+ }
+
+ #app .results
+ {
+   padding: 20px;
+   margin-left: -15px;
+   margin-right: -15px;
+   background: #eceeef;
+ }
+
  @media screen and ( max-width: 768px ){
    #app
    {
@@ -209,6 +248,18 @@ export default {
      height: 130px;
    }
 
+   #app .btn-group.rounded-md .btn-secondary
+   {
+     border: none;
+     background: none;
+     box-shadow: none;
+   }
+
+   #app .btn-group.rounded-md .btn:first-child
+   {
+     border-radius: 50%;
+   }
+
    #app .options .btn-group
    {
      background: #fff;
@@ -229,45 +280,8 @@ export default {
    {
      width: 30px;
      height: 30px;
-   }
-
-   #app .btn-group .btn-secondary
-   {
-     border: none;
-     background: none;
-     box-shadow: none;
-   }
-
-   #app .btn-group .btn:first-child
-   {
-     border-radius: 50%;
-   }
-
-   #app .result-chain-list
-   {
-     display: block;
-   }
-
-   #app .result-chain .btn
-   {
-     padding: 0 5px;
-   }
-
-   #app .result-chain .btn-danger
-   {
-     width: 15px;
-     height: 15px;
-     line-height: 15px;
      padding: 0;
-   }
-
-   #app .results
-   {
-     padding: 20px;
-     margin-left: -15px;
-     margin-right: -15px;
-     background: #eceeef;
-   }
+   } 
 
    #app #calculator-container
    {
