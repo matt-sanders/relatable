@@ -1,11 +1,16 @@
 <template>
   <div id="app">
     <div class="container pt-3 p-5-md text-center" id="calculator-container">
-      <div>
-        <h3>Add your common relatives</h3>
-        <p class="text-center">e.g. If you want to find out how you're related to your mother's cousin's son, add "Mother", "Cousin", "Son" in that order.</p>
         <div class="row">
+          <div class="col-md-12 hidden-md-down">
+            <h3>Add your common relatives</h3>
+            <p class="text-center">e.g. If you want to find out how you're related to your mother's cousin's son, add "Mother", "Cousin", "Son" in that order.</p>
+          </div>
           <div class="col-md-6 options" id="option-container">
+            <div class="col-md-12 hidden-md-up">
+              <h3>Add your common relatives</h3>
+              <p class="text-center">e.g. If you want to find out how you're related to your mother's cousin's son, add "Mother", "Cousin", "Son" in that order.</p>
+            </div>
             <div class="list-group">
               <div class="list-group-item" v-for="option in options">
                 <div class="d-flex w-100">
@@ -39,12 +44,9 @@
               </div><!--end result-labels-->
             </div><!--end results-->
           </div><!--end col -->
-        </div><!--end row-->
-        <div class="clearfix"></div>
-        
-      </div>
-    </div>
-  </div>
+        </div><!--end row-->        
+    </div><!--end container -->
+  </div><!--end app-->
 </template>
 
 <script>
@@ -274,9 +276,8 @@ export default {
 
    #app .options
    {
-     overflow-y: scroll;
-     padding: 5px;
-     height: 130px;
+     padding: 20px;
+     height: 300px;
    }
 
    #app .btn-group.rounded-md .btn-secondary
