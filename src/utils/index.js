@@ -44,6 +44,8 @@ export function sexualise(label, sex){
   if ( !sex ) return label;
 
   if ( label in list && sex in list[label] ) return list[label][sex];
+
+  return label;
 }
 
 /**
@@ -79,7 +81,7 @@ export function getFirst(chain = { sex: false, distance: [0] } ){
 export function getSecond(chain = {sex: false, distance: [0, 0]}){
   let first = parseInt(chain.distance[0]);
   let second = parseInt(chain.distance[1]);
-  if (first === 0 && second === 0) return sexualise('Sibling', chain.size);
+  if (first === 0 && second === 0) return sexualise('Sibling', chain.sex);
   let initialLabel = 'Niece/Nephew';
   if (first < 0) {
     initialLabel = second === 0 ? 'Aunt/Uncle' : 'Cousin';
@@ -315,7 +317,7 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
   });
 
   //add our sibling if we are an option
-  if ( finalChains.length > 1 ){
+  if ( relationChain.length > 1 ){
     finalChains.some( singleChain => {
       if ( getChainID( singleChain, false ) !== '0' ) return false;
       let sibling = {
@@ -329,95 +331,5 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
     });
   }
   if ( debug ) console.log( '---- END TRAVERSE ----' );
-  return finalChains;
-}
-
-export function oldTraverseRelation(relationChain, chain = [0]){
-  // -1 is a parent
-  // 0 is a sibling
-  // 1 is a child
-
-  let chains = [];
-
-  // if we're coming down from 3 for example
-  // we want '2', '2,0', '1', '1,0' so get all of those
-  if ( chain.length === 1 && chain[0] < 0 ){
-    for ( let i = -1; i > chain[0]; i-- ){
-      let newChain = cloneObject(relationChain);
-      newChain[0][ newChain[0].length - 1 ]--;
-      let extraChains = traverseRelation( newChain, [i,0] );
-      chains.push( ...extraChains );
-    }
-  }
-  
-  //go through each step in the relation chain
-  relationChain.forEach( (relation, idx) => {
-    chain[ chain.length - 1 ] += relation[0];
-
-    if ( chain.length === 2 && chain[1] <= 0 ){
-      // check if this is just going up to a parent-sibling ( -1,0 ).
-      // if it is we don't want to do any fancy business
-      if ( chain[1] === -1 && relation.length === 2 && relation[1] === 0 ){
-        chain[0]--;
-        chain[1] = 0;
-        return true;
-      }
-      
-      // set up a new relation chain for us to work on for these branches
-      let newChain = cloneObject(relationChain.slice( idx + 1 ));
-      if ( relation.length === 2 ) newChain.unshift( [ relation[1] ] );
-      let chainDupe;
-
-      // if we've gone into the negatives for the child branch
-      // we need to move up a parent
-      // e.g. -2,-1 becomes -3
-      if ( chain[1] < 0 ){
-        chainDupe = cloneObject( chain );
-        chainDupe[0] -= Math.abs(chainDupe[1]);
-        chainDupe.splice(-1,1);
-        if ( relation.length === 2 ) {
-          newChain[0][0]--;
-          chainDupe[0]++;
-        } else {
-          chain = chainDupe;
-        }
-      } else {
-        //duplicate the chain
-        chainDupe = cloneObject(chain.slice(0, 1));
-      }
-      //start the modified branch
-      if ( newChain.length > 0 ){
-        let extraChains = traverseRelation(newChain, chainDupe);
-        chains.push( ...extraChains );
-      }
-    }
-
-    if ( relation.length === 2 ){
-      if ( chain[0] <= 0 || chain.length === 2 ){
-        if ( chain.length === 1 ) chain.push(0);
-      }
-      chain[ chain.length - 1 ] += relation[1];
-    }
-  });
-
-  //add the main chain
-  chains.push( chain );
-  //if ( chain.length === 1 && chain[0] === 0 ) chains.push( [0, 0] );
-
-  //get only unique chains
-  let seenChains = [];
-  let finalChains = [];
-
-  chains.forEach( singleChain => {
-    let chainID = singleChain.join(',');
-    if ( seenChains.indexOf( chainID ) === -1 ){
-      seenChains.push( chainID );
-      finalChains.push( singleChain );
-    }
-  });
-
-  //add our sibling if we are an option
-  if ( finalChains.length > 1 && seenChains.indexOf( '0' ) > -1 && seenChains.indexOf('0,0') === -1) finalChains.push( [0,0] );
-  
   return finalChains;
 }

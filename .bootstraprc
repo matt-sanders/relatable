@@ -86,7 +86,7 @@ styles:
 #  alert: true
 #  progress: true
 #  media: true
-#  list-group: true
+  list-group: true
 #  responsive-embed: true
 #  close: true
 

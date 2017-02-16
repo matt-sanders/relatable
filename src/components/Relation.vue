@@ -12,7 +12,7 @@
     </button>
   </span>
   <span v-else="display">
-    <span v-if="chain.length > 1 || ( chain.length === 1 && chain[0] !== 0 )">your</span> {{label}}
+    <span v-if="chain.distance.length > 1 || ( chain.distance.length === 1 && chain.distance[0] !== 0 )">your</span> {{label}}
   </span>
 </template>
 

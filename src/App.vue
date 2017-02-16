@@ -3,32 +3,44 @@
     <div class="container pt-3 p-5-md text-center" id="calculator-container">
       <div>
         <h3>Add your common relatives</h3>
-        <p class="text-center">e.g. If you want to find out how you're related to your mother's cousin's son, add "Parent", "Cousin", "Child" in that order.</p>
-        <div class="options text-left text-md-center">
-          <relation v-for="option in options" :chain="option"/>
-        </div>
+        <p class="text-center">e.g. If you want to find out how you're related to your mother's cousin's son, add "Mother", "Cousin", "Son" in that order.</p>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="list-group options">
+              <div class="list-group-item" v-for="option in options">
+                <div class="d-flex w-100">
+                  <h5 class="mb-1">{{option.label}}</h5>
+                </div>
+                <relation v-for="relation in option.relations" :chain="relation"/>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div v-if="relationChain.length > 0" class="results">
+              <div class="result-chain">
+                <h4>
+                  Your:
+                  <span class="result-chain-list">
+                    <relation v-for="(link, index) in relationChain" :chain="link" :remove="true" :index="index" :pluralise="index < relationChain.length - 1"/>
+                  </span>
+                </h4>
+              </div><!--end result chain-->
+
+              <div class="result-labels">
+                <h4>
+                  Is:
+                  <span v-for="(relation, index) in allRelations">
+                    <relation :chain="relation" :display="true" class="text-primary" />
+                    <small class="text-muted" v-if="index !== allRelations.length - 1"> or </small>
+                  </span>
+                </h4>
+              </div><!--end result-labels-->
+            </div><!--end results-->
+          </div><!--end col -->
+        </div><!--end row-->
         <div class="clearfix"></div>
         <hr class="hidden-md-down"/>
-        <div v-if="relationChain.length > 0" class="results">
-          <div class="result-chain">
-            <h4>
-              Your:
-              <span class="result-chain-list">
-                <relation v-for="(link, index) in relationChain" :chain="link" :remove="true" :index="index" :pluralise="index < relationChain.length - 1"/>
-              </span>
-            </h4>
-          </div>
-
-          <div class="result-labels">
-            <h4>
-              Is:
-              <span v-for="(relation, index) in allRelations">
-                <relation :chain="relation" :display="true" class="text-primary" />
-                <small class="text-muted" v-if="index !== allRelations.length - 1"> or </small>
-              </span>
-            </h4>
-          </div>
-        </div>
+        
       </div>
     </div>
   </div>
@@ -43,13 +55,86 @@ export default {
   data(){
     return {
       options: [
-        [2],
-        [1],
-        [0,0],
-        [-1],
-        [-1,0],
-        [-2],
-        [-1,1]
+        {
+          label: 'Parents',
+          relations: [
+            {
+              sex: 'f',
+              distance: [-1]
+            },
+            {
+              sex: 'm',
+              distance: [-1]
+            },
+            {
+              sex: 'f',
+              distance: [-2]
+            },
+            {
+              sex: 'm',
+              distance: [-2]
+            }
+          ]
+        },
+        {
+          label: 'Children',
+          relations: [
+            {
+              sex: 'f',
+              distance: [1]
+            },
+            {
+              sex: 'm',
+              distance: [1]
+            },
+            {
+              sex: 'f',
+              distance: [2]              
+            },
+            {
+              sex: 'm',
+              distance: [2]
+            }
+          ]
+        },
+        {
+          label: 'Siblings',
+          relations: [
+            {
+              sex: 'f',
+              distance: [0,0]
+            },
+            {
+              sex: 'm',
+              distance: [0,0]
+            }
+          ]
+        },
+        {
+          label: 'Extended',
+          relations: [
+            {
+              sex: 'f',
+              distance: [-1,0]
+            },
+            {
+              sex: 'm',
+              distance: [-1,0]
+            },
+            {
+              sex: false,
+              distance: [-1,1]
+            },
+            {
+              sex: 'f',
+              distance: [0,1]
+            },
+            {
+              sex: 'm',
+              distance: [0,1]
+            }
+          ]
+        }
       ]
     };
   },

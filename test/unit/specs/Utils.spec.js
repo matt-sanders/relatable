@@ -57,6 +57,20 @@ const relationChains = [
     options: [ '-1,f' ]
   },
   {
+    //mothers son
+    chain: [
+      {
+        sex: 'f',
+        distance: [-1]
+      },
+      {
+        sex: 'm',
+        distance: [1]
+      }
+    ],
+    options: [ '0,m', '0,0,m' ]
+  },
+  {
     //childs sibling
     chain: [
       {
@@ -407,6 +421,11 @@ const labels = [
   {
     label: 'You!',
     sex: false,
+    expect: 'You!'
+  },
+  {
+    label: 'You!',
+    sex: 'm',
     expect: 'You!'
   },
   {
