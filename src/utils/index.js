@@ -13,16 +13,51 @@ export function countGreat(str){
 }
 
 /**
+ * Given a label and a sex it should output the correct label
+ * @arg {label} str
+ * @arg {sex} bool/str
+ */
+export function sexualise(label, sex){
+  let list = {
+    Child: {
+      m: 'Son',
+      f: 'Daughter'
+    },
+    Parent: {
+      m: 'Father',
+      f: 'Mother'
+    },
+    Sibling: {
+      m: 'Brother',
+      f: 'Sister'
+    },
+    'Niece/Nephew': {
+      m: 'Nephew',
+      f: 'Niece'
+    },
+    'Aunt/Uncle': {
+      m: 'Uncle',
+      f: 'Aunt'
+    }
+  };
+
+  if ( !sex ) return label;
+
+  if ( label in list && sex in list[label] ) return list[label][sex];
+}
+
+/**
  * Given a chain of descendants it should return the first line of descent
  * E.g passing [1] should return 'Parent', [3] -> Great Grand Parent.
  * @arg {chain} array
  */
-export function getFirst(chain = [0]){
+export function getFirst(chain = { sex: false, distance: [0] } ){
   // get the first item in the chain
-  let depth = chain[0];
-  if (depth === 0) return 'You!';
+  let depth = chain.distance[0];
+  if (depth === 0) return sexualise('You!', chain.sex);
   
   let parts = [ depth > 0 ? 'Child' : 'Parent' ];
+  parts[0] = sexualise( parts[0], chain.sex );
   
   // convert to positive for calculating branches
   let positiveDepth = Math.abs(depth);
@@ -41,19 +76,19 @@ export function getFirst(chain = [0]){
  * E.g passing [1,0] -> Sibling, [2,1] 1st cousin once removed.
  * @arg {chain} array
  */
-export function getSecond(chain = [0, 0]){
-  let first = parseInt(chain[0]);
-  let second = parseInt(chain[1]);
-  if (first === 0 && second === 0) return 'Sibling';
+export function getSecond(chain = {sex: false, distance: [0, 0]}){
+  let first = parseInt(chain.distance[0]);
+  let second = parseInt(chain.distance[1]);
+  if (first === 0 && second === 0) return sexualise('Sibling', chain.size);
   let initialLabel = 'Niece/Nephew';
   if (first < 0) {
     initialLabel = second === 0 ? 'Aunt/Uncle' : 'Cousin';
   }
-  let parts = [initialLabel];
+  let parts = [ sexualise(initialLabel, chain.sex) ];
 
   //calculate the great, grand etc
   if ( first === 0 || ( first < 0 && second === 0 ) ){
-    let positiveDepth = Math.abs( first === 0 ? chain[1] : chain[0]);
+    let positiveDepth = Math.abs( first === 0 ? chain.distance[1] : chain.distance[0]);
     for (let i = 1; i < positiveDepth; i++){
       let grand = (second === 0 && i === 1 || i !== 1 ) ? 'Great' : 'Grand';
       //if ( second == 0 && i === 1 ) grand = 'Great';
@@ -100,7 +135,7 @@ export function getSecond(chain = [0, 0]){
 * @arg {chain} array
 */
 export function getRelationLabel(chain){
-  return chain.length === 1 ? getFirst(chain) : getSecond(chain);
+  return chain.distance.length === 1 ? getFirst(chain) : getSecond(chain);
 }
 
 /**

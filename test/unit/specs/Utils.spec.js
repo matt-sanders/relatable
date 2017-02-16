@@ -1,4 +1,6 @@
-import {getFirst, getSecond, getRelationLabel, traverseRelation, cloneObject, countGreat, getChainID} from 'src/utils';
+import {getFirst, getSecond, getRelationLabel, traverseRelation, cloneObject, countGreat, getChainID, sexualise} from 'src/utils';
+
+const debug = false;
 
 const firstRelations = [
   [0, 'You!'],
@@ -32,55 +34,6 @@ const secondRelations = [
   [-3,5, '3rd Cousin twice removed'],
   [-1,4, '1st Cousin 3 times removed']
 ];
-
-/*
-const relationChains = [
-  {
-    chain: [ [0] ],
-    options: [ '0' ]
-  },
-  {
-    chain: [ [1], [0,0] ],
-    options: [ '1' ]
-  },
-  {
-    chain: [ [0,0], [1] ], //brothers, son
-    options: [ '0,1' ] // nephew
-  },
-  {
-    chain: [ [-1,1], [-1,1] ], //cousins cousin
-    options: [ '0', '0,0', '-1,1' ] //either you, your sibling or your cousin
-  },
-  {
-    chain: [ [-1,1], [-2] ],
-    options: [ '-2' ]
-  },
-  {
-    chain: [ [-2,1], [-1,2] ],
-    options: [ '0', '0,0', '-1,1', '-2,2' ]
-  },
-  {
-    chain: [ [-2,1], [-2,2] ],
-    options: [ '-1', '-1,0', '-2,1' ]
-  },
-  {
-    chain: [ [-1], [-2], [0,0], [1] ],
-    options: [ '-3,1' ]
-  },
-  {
-    chain: [ [-1], [-1,0], [-1,0], [-1,0] ],
-    options: [ '-4,0' ]
-  },
-  {
-    chain: [ [2], [-1, 1] ],
-    options: [ '2' ]
-  },
-  {
-    chain: [ [1], [-1, 1] ],
-    options: [ '0,1' ]
-  }
-];
-*/
 
 const relationChains = [
   {
@@ -435,6 +388,34 @@ const countGreats = [
   ['Great Great Great Great Aunt', '4th Great Aunt']
 ];
 
+const labels = [
+  {
+    label: 'Child',
+    sex: 'f',
+    expect: 'Daughter'
+  },
+  {
+    label: 'Child',
+    sex: 'm',
+    expect: 'Son'
+  },
+  {
+    label: 'Niece/Nephew',
+    sex: 'm',
+    expect: 'Nephew'
+  },
+  {
+    label: 'You!',
+    sex: false,
+    expect: 'You!'
+  },
+  {
+    label: 'Parent',
+    sex: false,
+    expect: 'Parent'
+  }
+];
+
 describe('Utils', () => {
   it('countGreat()', () => {
     countGreats.forEach( great => {
@@ -442,25 +423,47 @@ describe('Utils', () => {
       expect( newGreat ).to.equal( great[1] );
     });
   });
+
+  it('sexualise()', () => {
+    labels.forEach( label => {
+      expect( sexualise( label.label, label.sex ) ).to.equal( label.expect );
+    });
+  });
   
   it('getFirst()', () => {
     firstRelations.forEach( rel => {
-      expect( getFirst( [ rel[0] ] ) ).to.equal( rel[1] );
+      let chain = {
+        sex: false,
+        distance: [ rel[0] ]
+      };
+      expect( getFirst( chain ) ).to.equal( rel[1] );
     });
   });
 
   it('getSecond()', () => {
     secondRelations.forEach( rel => {
-      expect( getSecond([rel[0], rel[1]]) ).to.equal(rel[2]);
+      let chain = {
+        sex: false,
+        distance: [ rel[0], rel[1] ]
+      };
+      expect( getSecond(chain) ).to.equal(rel[2]);
     });
   });
 
   it('getRelationLabel()', () => {
     firstRelations.forEach( rel => {
-      expect( getRelationLabel( [ rel[0] ] ) ).to.equal( rel[1] );
+      let chain = {
+        sex: false,
+        distance: [ rel[0] ]
+      };
+      expect( getRelationLabel( chain ) ).to.equal( rel[1] );
     });
     secondRelations.forEach( rel => {
-      expect( getRelationLabel([rel[0], rel[1]]) ).to.equal(rel[2]);
+      let chain = {
+        sex: false,
+        distance: [ rel[0], rel[1] ]
+      };
+      expect( getRelationLabel(chain) ).to.equal(rel[2]);
     });    
   });
 
@@ -483,14 +486,14 @@ describe('Utils', () => {
 
   it('traverseRelation()', () => {
     relationChains.forEach( ( chainObj, idx ) => {
-      console.log("\n\n", idx+'-----------------------------------------------');
-      let options = traverseRelation( chainObj.chain, { sex: false, distance: [0] }, {}, true );
-      console.log('----');
+      if ( debug ) console.log("\n\n", idx+'-----------------------------------------------');
+      let options = traverseRelation( chainObj.chain, { sex: false, distance: [0] }, {}, debug );
+      if ( debug ) console.log('----');
       let mapped = options.map( option => {
         return getChainID( option );
       });
-      console.log('options are: ',chainObj.options);
-      console.log('====MAPPED====', mapped);
+      if ( debug ) console.log('options are: ',chainObj.options);
+      if ( debug ) console.log('====MAPPED====', mapped);
       expect( options ).to.be.length( chainObj.options.length );
       chainObj.options.forEach( option => {
         //console.log(option);
