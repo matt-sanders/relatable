@@ -84,6 +84,16 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      {test: /\.css$/, loader: 'vue-style-loader!css-loader'},
+      {test: /\.postcss$/, loader: 'vue-style-loader!css-loader'},
+      {
+        test: /\.sass$/,
+        loader: 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
+      },
+      {
+        test: /\.scss$/,
+        loader: 'vue-style-loader!css-loader!sass-loader'
       }
     ]
   },

@@ -4,6 +4,7 @@ import 'babel-polyfill';
 import Vue from 'vue'
 import App from './App'
 import store from './vuex';
+//import '../node_modules/perfect-scrollbar/dist/css/perfect-scrollbar.css';
 
 /* eslint-disable no-new */
 new Vue({

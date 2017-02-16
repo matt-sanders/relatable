@@ -9,7 +9,10 @@ describe('Relation.vue', () => {
       el: document.createElement('div'),
       render: (h) => h(Relation, {
         props: {
-          chain: [0,0]
+          chain: {
+            sex: false,
+            distance: [0,0]
+          }
         }
       })
     });
