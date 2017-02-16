@@ -5,7 +5,7 @@
         <h3>Add your common relatives</h3>
         <p class="text-center">e.g. If you want to find out how you're related to your mother's cousin's son, add "Mother", "Cousin", "Son" in that order.</p>
         <div class="row">
-          <div class="col-md-6 options ">
+          <div class="col-md-6 options" id="option-container">
             <div class="list-group">
               <div class="list-group-item" v-for="option in options">
                 <div class="d-flex w-100">
@@ -50,7 +50,8 @@
 <script>
 import Relation from './components/Relation';
 import { mapGetters, mapState } from 'vuex';
-
+import Ps from 'perfect-scrollbar';
+ 
 export default {
   name: 'app',
   data(){
@@ -149,6 +150,20 @@ export default {
     ...mapState({
       relationChain: state => state.Relations.relationChain
     })
+  },
+  methods: {
+    handleResize(){
+      Ps.update(this.scrollable);
+    }
+  },
+  mounted(){
+    this.scrollable = document.getElementById('option-container');
+    Ps.initialize(this.scrollable);
+
+    window.addEventListener('resize', this.handleResize);
+  },
+  beforeDestroy(){
+    window.removeEventListener('resize', this.handleResize);
   }
 }
 </script>
@@ -224,10 +239,26 @@ export default {
    background: #eceeef;
  }
 
+ #option-container
+ {
+   position: relative;
+ }
+
  @media screen and ( max-width: 768px ){
    #app
    {
      background: #eceeef;
+   }
+
+   #app .ps-scrollbar-y-rail
+   {
+     z-index: 2000;
+     opacity: 1;
+   }
+
+   #app .ps-scrollbar-y
+   {
+     background-color: #0275d8;
    }
    
    #app .options .btn
