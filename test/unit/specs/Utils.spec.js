@@ -5,21 +5,21 @@ const debug = false;
 const firstRelations = [
   [0, 'You!'],
   [-1, 'Parent'],
-  [-2, 'Grand Parent'],
-  [-3, 'Great Grand Parent'],
-  [-4, 'Great Great Grand Parent'],
+  [-2, 'Grandparent'],
+  [-3, 'Great Grandparent'],
+  [-4, 'Great Great Grandparent'],
   [1, 'Child'],
-  [2, 'Grand Child'],
-  [3, 'Great Grand Child'],
-  [4, 'Great Great Grand Child']
+  [2, 'Grandchild'],
+  [3, 'Great Grandchild'],
+  [4, 'Great Great Grandchild']
 ];
 
 const secondRelations = [
   [0,0, 'Sibling'],
   [0,1, 'Niece/Nephew'],
-  [0,2, 'Grand Niece/Nephew'],
-  [0,3, 'Great Grand Niece/Nephew'],
-  [0,4, 'Great Great Grand Niece/Nephew'],
+  [0,2, 'Grandniece/nephew'],
+  [0,3, 'Great Grandniece/nephew'],
+  [0,4, 'Great Great Grandniece/nephew'],
   [-1,0, 'Aunt/Uncle'],
   [-2,0, 'Great Aunt/Uncle'],
   [-3,0, 'Great Great Aunt/Uncle'],
@@ -397,9 +397,9 @@ const relationChains = [
 ];
 
 const countGreats = [
-  ['Great Great Grand Parent', 'Great Great Grand Parent'],
-  ['Great Great Great Grand Parent', '3rd Great Grand Parent'],
-  ['Great Great Great Great Aunt', '4th Great Aunt']
+  [ ['Great', 'Great', 'Grand', 'Parent'], 'Great Great Grandparent'],
+  [ ['Great', 'Great', 'Great', 'Grand', 'Parent'], '3rd Great Grandparent'],
+  [ ['Great', 'Great', 'Great', 'Great', 'Aunt'], '4th Great Aunt']
 ];
 
 const labels = [

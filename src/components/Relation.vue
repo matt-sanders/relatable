@@ -1,5 +1,5 @@
 <template>
-  <span class="btn-group rounded" v-if="!display && remove">
+  <span class="btn-group btn-rounded" v-if="!display && remove">
     <button type="button" class="btn btn-danger btn-sm close" @click="removeFromChain(index)">
       <span>&times;</span>
     </button>
@@ -8,7 +8,7 @@
       <span class="relation-label" v-else>{{label}}</span>
     </button>
   </span>
-  <span class="btn-group rounded-md" v-else-if="!display && !remove">
+  <span class="btn-group btn-rounded-md" v-else-if="!display && !remove">
     <button type="button" class="btn btn-primary" v-if="!remove" @click="handleClick()">
       <i class="material-icons">add</i>
     </button>

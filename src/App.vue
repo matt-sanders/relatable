@@ -27,7 +27,7 @@
               <div class="result-chain">
                 <h4>
                   Your:
-                  <span class="result-chain-list">
+                  <span class="result-chain-list d-block">
                     <relation v-for="(link, index) in relationChain" :chain="link" :remove="true" :index="index" :pluralise="index < relationChain.length - 1"/>
                   </span>
                 </h4>
@@ -170,7 +170,10 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+ @import '../node_modules/perfect-scrollbar/src/css/main';
+ @import '../node_modules/bootstrap/scss/_variables';
+ 
  html,
  body
  {
@@ -180,65 +183,72 @@ export default {
  #app
  {
    min-height: 100%;
- }
- 
- #app .btn,
- #app .btn-group
- {
-   margin: 5px;
- }
 
- #app .btn-group .btn
- {
-   margin: 0;
- }
+   .btn,
+   .btn-group
+   {
+     margin: 5px;
+   }
 
- #app .btn i
- {
-   font-size: 0.8em;
+   .btn-group
+   {
+     .btn
+     {
+       margin: 0;
+
+       i
+       {
+         font-size: 0.8em;
+       }
+     }
+
+     &.btn-rounded
+     {
+       .btn-secondary
+       {
+         border: none;
+         background: none;
+         box-shadow: none;
+       }
+
+       .btn
+       {
+         &:first-child
+         {
+           border-radius: 50%;
+         }
+       }
+     }
+   }
+
+   .result-chain
+   {
+     .btn
+     {
+       padding: 0 5px;
+
+       &-danger
+       {
+         width: 15px;
+         height: 15px;
+         line-height: 15px;
+         padding: 0;         
+       }
+     }
+   }
+
+   .results
+   {
+     padding: 20px;
+     margin-left: -15px;
+     margin-right: -15px;
+     background: $gray-lighter;     
+   }
  }
 
  #main-content
  {
    padding-bottom: 0;
- }
-
- #app .btn-group.rounded .btn-secondary
- {
-   border: none;
-   background: none;
-   box-shadow: none;
- }
-
- #app .btn-group.rounded .btn:first-child
- {
-   border-radius: 50%;
- }
-
- #app .result-chain-list
- {
-   display: block;
- }
-
- #app .result-chain .btn
- {
-   padding: 0 5px;
- }
-
- #app .result-chain .btn-danger
- {
-   width: 15px;
-   height: 15px;
-   line-height: 15px;
-   padding: 0;
- }
-
- #app .results
- {
-   padding: 20px;
-   margin-left: -15px;
-   margin-right: -15px;
-   background: #eceeef;
  }
 
  #option-container
@@ -249,76 +259,90 @@ export default {
  @media screen and ( max-width: 768px ){
    #app
    {
-     background: #eceeef;
-   }
+     background: $gray-lighter;
 
-   #app .ps-scrollbar-y-rail
-   {
-     z-index: 2000;
-     opacity: 1;
-   }
+     .ps-scrollbar-y-rail
+     {
+       z-index: 2000;
+       opacity: 1;
+     }
 
-   #app .ps-scrollbar-y
-   {
-     background-color: #0275d8;
-   }
-   
-   #app .options .btn
-   {
-     padding: 3px 10px;
-     font-size: 0.875rem;
-   }
+     .ps-scrollbar-y
+     {
+       background-color: $brand-primary;
+     }
 
-   #app .results h4
-   {
-     font-size: 1.2rem;
-   }
+     .options
+     {
+       padding: 20px;
+       height: 300px;
+       
+       .btn
+       {
+         padding: 3px 10px;
+         font-size: 0.875rem;
+       }
 
-   #app .options
-   {
-     padding: 20px;
-     height: 300px;
-   }
+       .btn-group
+       {
+         background: $white;
+         border-bottom: 1px solid $gray-lighter;
+         padding: 0px 0 10px 0;
+         position: relative;
+         display: block;
+         text-align: left;
 
-   #app .btn-group.rounded-md .btn-secondary
-   {
-     border: none;
-     background: none;
-     box-shadow: none;
-   }
+         &:first-child
+         {
+           border-top: 1px solid $gray-lighter;
+           padding-top: 10px;
+         }
 
-   #app .btn-group.rounded-md .btn:first-child
-   {
-     border-radius: 50%;
-   }
+         .btn
+         {
+           &:first-child
+           {
+             width: 30px;
+             height: 30px;
+             padding: 0;
+           }
+         }
+       }
+     }
 
-   #app .options .btn-group
-   {
-     background: #fff;
-     border-bottom: 1px solid #eceeef;
-     padding: 0px 0 10px 0;
-     position: relative;
-     display: block;
-     text-align: left;
-   }
+     .results
+     {
+       h4
+       {
+         font-size: 1.2rem;
+       }
+     }
 
-   #app .options .btn-group:first-child
-   {
-     border-top: 1px solid #eceeef;
-     padding-top: 10px;
-   }
+     .btn-group
+     {
+       &.btn-rounded-md
+       {
+         .btn-secondary
+         {
+           border: none;
+           background: none;
+           box-shadow: none;
+         }
 
-   #app .options .btn-group .btn:first-child
-   {
-     width: 30px;
-     height: 30px;
-     padding: 0;
-   } 
+         .btn
+         {
+           &:first-child
+           {
+             border-radius: 50%;
+           }
+         }
+       }
+     }
 
-   #app #calculator-container
-   {
-     background: #ffffff;
-   }
-   
+     #calculator-container
+     {
+       background: $white;
+     }
+   }   
  }
 </style>

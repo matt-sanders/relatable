@@ -4,7 +4,14 @@ import numeral from 'numeral';
  * Given a string like 'Great Great Great Grand Parent' should change it to '3rd Great Grand Parent'
  * @arg {str} string
  */
-export function countGreat(str){
+export function countGreat(parts){
+  if ( parts[ parts.length - 2 ] === 'Grand' ){
+    let last = parts.pop().toLowerCase();
+    parts[ parts.length - 1 ] += last;
+  }
+
+  let str = parts.join(' ');
+  
   //count the greats
   let matches = str.match(/Great/g);
   if ( !matches || matches.length < 3 ) return str;
@@ -70,7 +77,7 @@ export function getFirst(chain = { sex: false, distance: [0] } ){
     parts.unshift(i === 1 ? 'Grand' : 'Great')
   }
   
-  return countGreat( parts.join(' ') );
+  return countGreat( parts );
 }
 
 /**
@@ -129,7 +136,7 @@ export function getSecond(chain = {sex: false, distance: [0, 0]}){
     }
   }
   
-  return countGreat( parts.join(' ') );
+  return countGreat( parts );
 }
 
 /**
