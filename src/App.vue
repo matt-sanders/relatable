@@ -2,7 +2,7 @@
   <div id="app">
     <div class="container pt-3 p-5-md text-center" id="calculator-container">
         <div class="row">
-          <div class="col-md-12 hidden-md-down">
+          <div class="col-md-12 hidden-sm-down">
             <h3>Add your common relatives</h3>
             <p class="text-center">e.g. If you want to find out how you're related to your mother's cousin's son, add "Mother", "Cousin", "Son" in that order.</p>
           </div>
@@ -246,20 +246,15 @@ export default {
    }
  }
 
- #main-content
- {
-   padding-bottom: 0;
- }
-
  #option-container
  {
    position: relative;
  }
 
- @media screen and ( max-width: 768px ){
+ @media screen and ( max-width: 767px ){
+   
    #app
    {
-     background: $gray-lighter;
 
      .ps-scrollbar-y-rail
      {
