@@ -9,8 +9,8 @@
     </button>
   </span>
   <span class="btn-group btn-rounded-md" v-else-if="!display && !remove">
-    <button type="button" class="btn btn-primary" v-if="!remove" @click="handleClick()">
-      <i class="material-icons">add</i>
+    <button type="button" class="btn btn-primary font-weight-bold" v-if="!remove" @click="handleClick()">
+      &#43;
     </button>
     <button type="button" class="btn btn-secondary relation" v-bind:class="{'btn-sm': remove}" @click="handleClick()">
       <span class="relation-label" v-if="pluralise">{{label}}'s</span>
