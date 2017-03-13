@@ -1,6 +1,6 @@
 import {getFirst, getSecond, getRelationLabel, traverseRelation, cloneObject, countGreat, getChainID, sexualise} from 'src/utils';
 
-const debug = false;
+const debug = true;
 
 const firstRelations = [
   [0, 'You!'],
@@ -393,6 +393,56 @@ const relationChains = [
       }
     ],
     options: [ '0,1' ]
+  },
+  {
+    //mothers grandaughter
+    chain: [
+      {
+        sex: 'f',
+        distance: [-1]
+      },
+      {
+        sex: 'f',
+        distance: [2]
+      }
+    ],
+    options: ['1,f', '0,1,f']
+  },
+  {
+    //mothers daughters daughter
+    chain: [
+      {
+        sex: 'f',
+        distance: [-1]
+      },
+      {
+        sex: 'f',
+        distance: [1]
+      },
+      {
+        sex: 'f',
+        distance: [1]
+      }
+    ],
+    options: ['1,f', '0,1,f']
+  },
+  {
+    //mothers childs child
+    chain: [
+      {
+        sex: 'f',
+        distance: [-1]
+      },
+      {
+        sex: false,
+        distance: [1]
+      },
+      {
+        sex: false,
+        distance: [1]
+      }
+    ],
+    options: ['1', '0,1']
   }
 ];
 

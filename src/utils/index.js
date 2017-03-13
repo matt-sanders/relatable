@@ -201,11 +201,20 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
 
   // go through each step of the relation chain
   relationChain.some( ( relation, idx ) => {
-    if ( debug ) console.log('==== RELATION:', relation );
+    if ( debug ) console.log('==== RELATION:', relation, distance );
     
     let relDistance = relation.distance;
     let singleRelDistance = relDistance.length === 1;
+    let wasNegativeDistance = distance[0] < 0;
     distance[ distance.length - 1 ] += relDistance[0];
+
+    //check if we've skipped ourselves and are going down the tree
+    if ( singleDistance && wasNegativeDistance && singleRelDistance && distance[0] > 0 ) {
+      if ( debug ) console.log('==== C: Begin Traverse');
+      let newChain = cloneObject(relationChain.slice( idx + 1 ));
+      let extraChains = traverseRelation( newChain, { sex: chain.sex, distance: [ 0, ...distance ] }, sexes, debug );
+      chains.push( ...extraChains );
+    }
     
     if ( debug ) console.log('1: ', distance );
 
@@ -271,7 +280,7 @@ export function traverseRelation( relationChain, chain = { sex: false, distance:
 
     // if we are going down the child tree and there are no siblings specified then specify them
     // e.g. say we are at [-2] and the next relation is [1]. That could be [-1] or [-1,0] so continue with both of them
-    if ( singleDistance && distance[0] < 0 && singleRelDistance && relDistance[0] > 0 ){
+    if ( singleDistance && distance[0] <= 0 && singleRelDistance && relDistance[0] > 0 ){
       if ( debug ) console.log('==== B: Begin Traverse');
       let newChain = cloneObject(relationChain.slice( idx + 1 ));
       let extraChains = traverseRelation( newChain, { sex: chain.sex, distance: [ ...distance, 0 ] }, sexes, debug );
