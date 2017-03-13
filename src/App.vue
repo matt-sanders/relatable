@@ -22,7 +22,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6" id="results-container">
             <div v-if="relationChain.length > 0" class="results rounded">
               <div class="result-chain">
                 <h4>
@@ -270,7 +270,7 @@ export default {
      .options
      {
        padding: 20px;
-       height: 300px;
+       height: 370px;
        
        .btn
        {
@@ -302,6 +302,20 @@ export default {
              padding: 0;
            }
          }
+       }
+     }
+
+     #results-container
+     {
+       &::before
+       {
+         content: '';
+         position: absolute;
+         left: 0;
+         top: -20px;
+         right: 0;
+         height: 20px;
+         background:linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); 
        }
      }
 
